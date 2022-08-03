@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "build": "remix build",
+    "dev": "concurrently \"npm run sass\" \"remix dev\"",
+    "sass": "sass --watch --no-source-map app/:build/"
+  },
+  "dependencies": {
+    "@remix-run/node": "^1.6.7",
+    "@remix-run/react": "^1.6.7",
+    "@remix-run/vercel": "^1.6.7",
+    "@vercel/node": "^2.4.4",
+    "classnames": "^2.3.1",
+    "qs": "^6.11.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "sass": "^1.54.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^1.6.7",
+    "@remix-run/eslint-config": "^1.6.7",
+    "@remix-run/serve": "^1.6.7",
+    "@types/qs": "^6.9.7",
+    "@types/react": "^17.0.47",
+    "@types/react-dom": "^17.0.17",
+    "concurrently": "^7.3.0",
+    "eslint": "^8.20.0",
+    "typescript": "^4.7.4"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

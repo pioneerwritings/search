@@ -1,0 +1,17 @@
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.logo img {
+  width: 100px;
+}
+
+.search-icon img {
+  width: 25px;
+}
