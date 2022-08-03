@@ -4,10 +4,10 @@ import { Card, CardLinks, Show } from '~/components'
 import { isSeries } from '~/utils'
 import { useScrollBottom } from '~/hooks'
 import { useState, useEffect } from 'react'
+import { ArticleDocument } from '~/types'
 
-import styles from '../../build/scss/routes/app.css'
+import styles from '~/scss/routes/app.css'
 import qs from 'qs'
-import { ArticleDocument, Series } from '~/types'
 
 type SearchCategory = 'articles' | 'series' | 'topic'
 

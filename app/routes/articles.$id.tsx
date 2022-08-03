@@ -1,7 +1,7 @@
 import type { LoaderFunction, LinksFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { Show } from '~/components'
-import styles from '../../build/scss/routes/article.css'
+import styles from '~/scss/routes/article.css'
 
 export const loader: LoaderFunction = async ({ params }) => {
   const id = params.id as string
