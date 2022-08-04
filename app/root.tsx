@@ -9,8 +9,8 @@ import {
 } from '@remix-run/react'
 
 import { Header, HeaderLinks } from './components'
-import styles from '../app/scss/global.css'
-import reset from '../app/scss/reset.css'
+import styles from '../app/styles/global/global.css'
+import reset from '../app/styles/global/reset.css'
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',

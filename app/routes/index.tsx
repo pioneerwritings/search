@@ -6,7 +6,7 @@ import { useScrollBottom } from '~/hooks'
 import { useState, useEffect } from 'react'
 import { ArticleDocument } from '~/types'
 
-import styles from '../scss/routes/app.css'
+import styles from '~/styles/routes/app/app.css'
 import qs from 'qs'
 
 type SearchCategory = 'articles' | 'series' | 'topic'

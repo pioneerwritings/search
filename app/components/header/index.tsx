@@ -1,8 +1,8 @@
 import { Link } from '@remix-run/react'
-import href from './header.css'
+import styles from '~/styles/components/header/header.css'
 
 export const HeaderLinks = () => [
-  { rel: 'stylesheet', href }
+  { rel: 'stylesheet', href: styles }
 ]
 
 export const Header = () => {
