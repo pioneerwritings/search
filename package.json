@@ -2,9 +2,9 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
+    "build": "sass app/:app/ --style=compressed && remix build",
     "dev": "concurrently \"npm run sass\" \"remix dev\"",
-    "sass": "sass --watch --no-source-map app/:app/"
+    "sass": "sass --watch app/:app/ --style=compressed --no-source-map"
   },
   "dependencies": {
     "@remix-run/node": "^1.6.7",
