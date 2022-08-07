@@ -3,7 +3,7 @@ import { Show } from '~/components'
 import { KeyboardEvent } from 'react'
 import { Link, useNavigate } from '@remix-run/react'
 
-import styles from '~/styles/components/card/card.css'
+import styles from '../../styles/components/card/card.css'
 
 interface CardProps {
   id: string
