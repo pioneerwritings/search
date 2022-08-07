@@ -4,59 +4,57 @@ import { Card, CardLinks, Show } from '~/components'
 import { isSeries } from '~/utils'
 import { useScrollBottom } from '~/hooks'
 import { useState, useEffect } from 'react'
-import { ArticleDocument } from '~/types'
+import { ArticleDocument, Series } from '~/types'
 
-import styles from '~/styles/routes/app/app.css'
+import styles from '~/styles/routes/home/home.css'
 import qs from 'qs'
 
-type SearchCategory = 'articles' | 'series' | 'topic'
+type SearchCategory = 'articles' | 'series' | 'topics'
+const LIMIT = 15
 
 export const loader: LoaderFunction = async ({ request }) => {
   const params = new URL(request.url).searchParams
   const url = process.env.STRAPI_API_URL as string
-  const init = !params.get('pagination[start]')
+  const cat = params.get('category')
 
   const query = qs.stringify({
     pagination: {
       start: params.get('pagination[start]') ?? 0,
-      limit: params.get('pagination[limit]') ?? 15
+      limit: params.get('pagination[limit]') ?? LIMIT
     },sort: ['id:desc'] }, { encodeValuesOnly: true
   })
 
-  const res1 = await fetch(`${url}/articles?${query}`)
+  const articles = await fetch(`${url}/articles?${query}`)
 
-  if(init){
-    // const res2 = await fetch(`${url}/series`)
-    // const res3 = await fetch(`${url}/topics`)
-
-    return json({
-      articles: await res1.json(),
-      // series: await res2.json(),
-      // topics: await res3.json()
-    })
+  if(cat && cat === 'series'){
+    const series = await fetch(`${url}/series`)
+    return json({ series: await series.json() })
   }
-  return json<ArticleDocument[]>(
-    await res1.json()
-  )
+  if(cat && cat === 'topics'){
+    const topics = await fetch(`${url}/topics`)
+    return json({ topics: await topics.json() })
+  }
+  return json({
+    articles: await articles.json()
+  })
 }
 
 export const links = () => [
-  ...CardLinks(),
-  { rel: 'stylesheet', href: styles }
+  ...CardLinks(), { rel: 'stylesheet', href: styles }
 ]
 
-const LIMIT = 15
-
 export default function Index() {
-  // const { series, topics } = useLoaderData()
   const [ category, setCategory ] = useState<SearchCategory>('articles')
   const [ articles, setArticles ] = useState<ArticleDocument[]>(useLoaderData().articles.data)
+  const [ series, setSeries ] = useState<Series[]>()
+  const [ topics, setTopics ] = useState<string[]>()
   const [ start, setStart ] = useState<number>(LIMIT)
+
   const { bottom } = useScrollBottom()
-  const { data, load } = useFetcher()
+  const { data, load, state } = useFetcher()
 
   useEffect(() => {    
-    if(bottom){
+    if(category === 'articles' && bottom){
       const qs = new URLSearchParams([
         ['pagination[start]', String(start)],
         ['pagination[limit]', String(LIMIT)]
@@ -67,17 +65,34 @@ export default function Index() {
 
   useEffect(() => {
     if(data){
-      setStart(start + LIMIT)
-      setArticles(prev => [...prev, ...data.data ])
+      if(category === 'articles'){
+        setStart(start + LIMIT)
+        setArticles(prev => [...prev, ...data.articles.data ])
+      }
+      if(category === 'series'){
+        setSeries(data.series.data)
+      }
+      if(category === 'topics'){
+        setTopics(data.topics.data)
+      }
     }
   }, [data])
+
+  useEffect(() => {
+    if(category === 'series' && !series){
+      return load(`/?index&category=series`)
+    }
+    if(category === 'topics' && !topics){
+      return load(`/?index&category=topics`)
+    }
+  }, [category])
 
   const handleTabSelect = (tab: SearchCategory) => {
     setCategory(tab)
   }
 
   return (
-    <div className='app'>
+    <div className='home'>
       <div
         className='tabs'
         role='tablist'
@@ -102,11 +117,17 @@ export default function Index() {
           }
       </div>
 
+      <Show when={state === 'loading'}>
+        <div className='loading'>
+          <small>Loading data...</small>
+        </div>
+      </Show>
+
       <div role='feed' aria-label='Latest articles'>
         <div role='grid'>
           <Show when={category === 'articles'}>
             {
-              articles.map((article: any) => {
+              articles?.map((article: any) => {
                 const { id, attributes } = article
                 const { author, topic } = attributes
                 
@@ -128,8 +149,8 @@ export default function Index() {
           </Show>
 
           <Show when={category === 'series'}>
-            {/* {
-              series.data.map((series: any) => {
+            {
+              series?.map((series: any) => {
                 const { id, attributes } = series
                 const { author, topic, articles } = attributes
 
@@ -145,7 +166,7 @@ export default function Index() {
                   />
                 )
               })
-            } */}
+            }
           </Show>
         </div>
       </div>
