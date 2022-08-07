@@ -1,0 +1,53 @@
+
+.app {
+  width: 100%;
+  margin: 0 auto;
+
+  @media screen and (min-width: 1280px){
+    width: 1280px;
+    border-right: 1px solid var(--gray);
+    border-left: 1px solid var(--gray);
+  }
+  @media screen and (min-width: 1440px){
+    width: 1400px;
+  }
+}
+
+.error-boundary {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 0 0 0;
+
+  .overlay {
+    display: block;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: auto;
+
+      &:focus {
+        outline: 2px dotted black;
+      }
+    }
+
+    &::after {
+      content: '';
+      width: 98%;
+      height: 98%;
+      display: block;
+      background: var(--red);
+      position: absolute;
+      top: 0;
+      left: 0;
+      mix-blend-mode: overlay;
+    }
+  }
+
+  p {
+    font-weight: 700;
+  }
+}

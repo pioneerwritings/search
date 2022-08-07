@@ -4,7 +4,7 @@
   "scripts": {
     "build": "remix build",
     "dev": "concurrently \"npm run sass\" \"remix dev\"",
-    "sass": "sass --watch --no-source-map app/:app"
+    "sass": "sass --watch --no-source-map app/:app/"
   },
   "dependencies": {
     "@remix-run/node": "^1.6.7",

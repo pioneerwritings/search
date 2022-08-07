@@ -5,11 +5,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  box-sizing: border-box;
+
+  @media screen and (min-width: 1280px){
+    padding: 1.5rem 2.25rem;
+  }
 }
 
 .logo img {
-  width: 100px;
+  width: 82px;
+
+  @media screen and (min-width: 1280px){
+    width: 100px;
+  }
 }
 
 .search-icon img {
