@@ -1,12 +1,18 @@
-import type { LoaderFunction, LinksFunction } from '@remix-run/node'
+import { LoaderFunction, LinksFunction, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { Show } from '~/components'
+import { isSeries } from '~/utils'
 import styles from '~/styles/routes/article/$article.css'
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const id = params.id as string
+export const loader: LoaderFunction = async ({ params }) => { 
+  const id  = params.id as string
   const url = process.env.STRAPI_API_URL as string
-  return await fetch(`${url}/articles/${id}`)
+  const res = await fetch(`${url}/articles/${id}`)
+
+  return json({
+    article: await res.json(),
+    series: {}
+  })
 }
 
 export const links: LinksFunction = () => [
@@ -17,7 +23,8 @@ export const links: LinksFunction = () => [
 ]
 
 export default function ArticlePage(){
-  const { data: { attributes } } = useLoaderData()
+  const { article } = useLoaderData()
+  const { data: { attributes } } = article
   const { title, subtitle, author, body, periodical } = attributes
 
   const periodicalName = periodical.data.attributes.name
@@ -31,7 +38,9 @@ export default function ArticlePage(){
         <address className='author'>By {authorName}</address>
 
         <Show when={!!subtitle}>
-          <small>{subtitle}</small>
+          <small className='subtitle'>
+            {subtitle}
+          </small>
         </Show>
 
         <section className='body'>
