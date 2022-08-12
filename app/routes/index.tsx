@@ -14,8 +14,9 @@ const LIMIT = 15
 
 export const loader: LoaderFunction = async ({ request }) => {
   const params = new URL(request.url).searchParams
+  const series = params.get('series')
   const url = process.env.STRAPI_API_URL as string
-  const cat = params.get('category')
+  const initial = !params.get('pagination[start]')
 
   const query = qs.stringify({
     pagination: {
@@ -24,19 +25,20 @@ export const loader: LoaderFunction = async ({ request }) => {
     },sort: ['id:desc'] }, { encodeValuesOnly: true
   })
 
-  const articles = await fetch(`${url}/articles?${query}`)
+  const articles = (
+    await (await fetch(`${url}/articles?${query}`)).json()
+  )
 
-  if(cat && cat === 'series'){
+  if(series){
     const series = await fetch(`${url}/series`)
     return json({ series: await series.json() })
   }
-  if(cat && cat === 'topics'){
-    const topics = await fetch(`${url}/topics`)
-    return json({ topics: await topics.json() })
+  if(initial){
+    return json({
+      articles, topics: await fetch(`${url}/topics`)
+    })
   }
-  return json({
-    articles: await articles.json()
-  })
+  return json({ articles })
 }
 
 export const links = () => [
@@ -44,14 +46,22 @@ export const links = () => [
 ]
 
 export default function Index() {
+  const initialData = useLoaderData()
+
   const [ category, setCategory ] = useState<SearchCategory>('articles')
-  const [ articles, setArticles ] = useState<ArticleDocument[]>(useLoaderData().articles.data)
-  const [ series, setSeries ] = useState<Series[]>()
-  const [ topics, setTopics ] = useState<string[]>()
+  const [ articles, setArticles ] = useState<ArticleDocument[]>(initialData.articles.data)
+  const [ series, setSeries ] = useState<Series[]>([])
+  const [ topics, setTopics ] = useState<string[]>(initialData.topics.data)
   const [ start, setStart ] = useState<number>(LIMIT)
 
   const { bottom } = useScrollBottom()
   const { data, load, state } = useFetcher()
+
+  useEffect(() => {
+    if(category === 'series' && !series.length){
+      load('/?index&series=true')
+    }
+  }, [category])
 
   useEffect(() => {    
     if(category === 'articles' && bottom){
@@ -64,28 +74,16 @@ export default function Index() {
   }, [bottom])
 
   useEffect(() => {
-    if(data){
-      if(category === 'articles'){
+    if(data){      
+      if('series' in data){
+        setSeries(data.series.data)
+      }
+      if('articles' in data){
         setStart(start + LIMIT)
         setArticles(prev => [...prev, ...data.articles.data ])
       }
-      if(category === 'series'){
-        setSeries(data.series.data)
-      }
-      if(category === 'topics'){
-        setTopics(data.topics.data)
-      }
     }
   }, [data])
-
-  useEffect(() => {
-    if(category === 'series' && !series){
-      return load(`/?index&category=series`)
-    }
-    if(category === 'topics' && !topics){
-      return load(`/?index&category=topics`)
-    }
-  }, [category])
 
   const handleTabSelect = (tab: SearchCategory) => {
     setCategory(tab)
