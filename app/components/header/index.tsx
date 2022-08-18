@@ -1,20 +1,15 @@
 import { Link } from '@remix-run/react'
-import styles from '~/styles/components/header/header.css'
-
-export const HeaderLinks = () => [
-  { rel: 'stylesheet', href: styles }
-]
 
 export const Header = () => {
   return (
-    <header className='header'>
+    <header className='flex justify-between px-8 pt-6'>
       <Link to='/' className='logo'>
-        <img src='/images/logo.svg' alt='Go to the home page' />
+        <img className='w-24' src='/images/logo.svg' alt='Go to the home page' />
       </Link>
 
-      <Link to='/search' className='search-icon'>
-        <img src='/images/search.svg' alt='Go to the search page' /> 
-      </Link>
+      <button type='button' role='button' aria-label='Search'>
+        <img src='/images/search.svg' alt='' aria-hidden='true' />
+      </button> 
     </header>
   )
 }
