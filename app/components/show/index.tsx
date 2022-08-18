@@ -1,6 +1,7 @@
-import { FC } from 'react'
+import type { FC } from 'react'
+import type { PropsWithChildren } from 'react'
 
-interface Props {
+type Props = PropsWithChildren & {
   when: boolean
 }
 
