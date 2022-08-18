@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Heldane Bold';
+    src: url('/fonts/heldane-display-web-bold.eot') format('eot'),
+    url('/fonts/heldane-display-web-bold.woff') format('woff'),
+    url('/fonts/heldane-display-web-bold.woff2') format('woff2');
+    font-display: fallback;
+  }
+  @font-face {
+    font-family: 'Heldane Regular';
+    src: url('/fonts/heldane/heldane-display-web-regular.eot') format('eot'),
+    url('/fonts/heldane-display-web-regular.woff') format('woff'),
+    url('/fonts/heldane-display-web-regular.woff2') format('woff2');
+    font-display: fallback;
+  }
+}
