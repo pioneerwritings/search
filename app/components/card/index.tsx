@@ -2,8 +2,7 @@ import { KeyboardEvent } from 'react'
 import { truncateText } from '~/utils'
 import { Show } from '~/components'
 import { Link, useNavigate } from '@remix-run/react'
-
-import styles from '~/styles/components/card/card.css'
+import { styles } from '~/styles/components/card'
 
 interface CardProps {
   id: string
@@ -13,10 +12,6 @@ interface CardProps {
   topic: string
   seriesLabel?: string
 }
-
-export const CardLinks = () => [
-  { rel: 'stylesheet', href: styles }
-]
 
 export const Card = ({
   id,
@@ -36,31 +31,31 @@ export const Card = ({
   }
 
   return (
-    <Link to={`/articles/${id}`}>
+    <Link to={`/articles/${id}`} className='max-w-[368px]'>
       <article
-        className='card'
+        className={styles.card}
         onKeyPress={handleKeypress}
         data-id={id}
         data-is-series={isSeries ? true : false}
         aria-label={title}
         aria-describedby={id}
         tabIndex={0}>
-        <header>
-          <small className='author'>
+        <header className={styles.header}>
+          <small className={styles.author}>
             {author}
           </small>
     
           <Show when={isSeries}>
-            <span className='series-label'>
+            <small className={styles.series}>
               {seriesLabel}
-            </span>
+            </small>
           </Show>
         </header>
 
-        <h2>{title}</h2>
-        <p id={id}>{truncateText(excerpt, 70)}</p>
+        <h2 className={styles.h2}>{title}</h2>
+        <p className={styles.p} id={id}>{truncateText(excerpt, 70)}</p>
 
-        <small className='topic'>
+        <small className={styles.topic}>
           {topic}
         </small>
       </article>
