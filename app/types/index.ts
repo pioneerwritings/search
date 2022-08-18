@@ -19,3 +19,8 @@ export interface Series {
   description: string
   articles: ArticleDocument[]
 }
+
+export interface DropdownItem {
+  id: number
+  value: string
+}
