@@ -2,7 +2,6 @@ import { LoaderFunction, LinksFunction, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { Show } from '~/components'
 import { isSeries } from '~/utils'
-import styles from '~/styles/routes/article/$article.css'
 
 export const loader: LoaderFunction = async ({ params }) => { 
   const id  = params.id as string
@@ -50,13 +49,6 @@ export const loader: LoaderFunction = async ({ params }) => {
     }
   })
 }
-
-export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: styles },
-  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-  { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
-  { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap' }
-]
 
 export default function ArticlePage(){
   const { article, series } = useLoaderData()
