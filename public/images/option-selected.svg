@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Beta-Signup-Page-Copy" transform="translate(-1113.000000, -551.000000)" stroke="#3E3BC9" stroke-width="1.5">
+            <g id="check-circle-1" transform="translate(1114.000000, 552.000000)">
+                <path d="M3.26666667,7.7616 L4.79111111,9.92506667 C4.90843418,10.100318 5.10320457,10.2080828 5.31400799,10.214381 C5.52481141,10.2206791 5.72566801,10.1247345 5.85324444,9.9568 L10.7333333,3.78248889" id="Shape"></path>
+                <circle id="Oval" cx="7" cy="7" r="7"></circle>
+            </g>
+        </g>
+    </g>
+</svg>
