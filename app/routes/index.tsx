@@ -5,7 +5,6 @@ import { isSeries } from '~/utils'
 import { useScrollBottom } from '~/hooks'
 import { useState, useEffect } from 'react'
 import { ArticleDocument, Series, DropdownItem } from '~/types'
-import { isProduction } from '~/config'
 import { styles } from '~/styles/home'
 
 import Spinner from 'react-spinner-material'
@@ -109,11 +108,11 @@ export default function Index() {
   const handleTopicChange = (topic: DropdownItem) => {
     setTopic(topic)
     
-    if(isProduction){
-      // GA4?.gtag('event', 'topic_select', {
-      //   topic: topic.value
-      // })
-    }
+    // if(isProduction){
+    //   GA4?.gtag('event', 'topic_select', {
+    //     topic: topic.value
+    //   })
+    // }
   }
 
   const articleList = (): ArticleDocument[] | undefined => {
