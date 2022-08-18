@@ -1,5 +1,6 @@
-import type { MetaFunction } from '@remix-run/node'
-import { ErrorBoundaryComponent } from '@remix-run/node'
+import type { LinksFunction, MetaFunction } from '@remix-run/node'
+import type { ErrorBoundaryComponent } from '@remix-run/node'
+
 import {
   Links,
   LiveReload,
@@ -9,10 +10,9 @@ import {
   ScrollRestoration,
 } from '@remix-run/react'
 
-import { Header, HeaderLinks } from './components'
-import styles from './styles/global/app.css'
-import globals from './styles/global/global.css'
-import reset from './styles/global/reset.css'
+import { Header, Footer } from './components'
+import { rootStyles } from './styles/root'
+import styles from './styles/app.css'
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -20,11 +20,11 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1, user-scalable=yes',
 })
 
-export const links = () => [
-  ...HeaderLinks(),
-  { rel: 'stylesheet', href: reset },
-  { rel: 'stylesheet', href: globals },
-  { rel: 'stylesheet', href: styles },
+export const links: LinksFunction = () => [
+  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+  { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
+  { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap' },
+  { rel: 'stylesheet', href: styles }
 ]
 
 export default function App() {
@@ -36,9 +36,10 @@ export default function App() {
       </head>
       
       <body>
-        <div className='app'>
+        <div className={rootStyles}>
           <Header />
           <Outlet />
+          <Footer />
         </div>
         <ScrollRestoration />
         <Scripts />
