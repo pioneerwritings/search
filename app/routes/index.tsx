@@ -1,12 +1,14 @@
 import { LoaderFunction, json } from '@remix-run/node'
 import { useLoaderData, useFetcher } from '@remix-run/react'
-import { Card, CardLinks, Show } from '~/components'
+import { Card, Show, Dropdown } from '~/components'
 import { isSeries } from '~/utils'
 import { useScrollBottom } from '~/hooks'
 import { useState, useEffect } from 'react'
-import { ArticleDocument, Series } from '~/types'
+import { ArticleDocument, Series, DropdownItem } from '~/types'
+import { isProduction } from '~/config'
+import { styles } from '~/styles/home'
 
-import styles from '~/styles/routes/home/home.css'
+import Spinner from 'react-spinner-material'
 import qs from 'qs'
 
 type SearchCategory = 'articles' | 'series' | 'topics'
@@ -14,6 +16,7 @@ const LIMIT = 15
 
 export const loader: LoaderFunction = async ({ request }) => {
   const params = new URL(request.url).searchParams
+  const topic = params.get('topic')
   const series = params.get('series')
   const url = process.env.STRAPI_API_URL as string
   const initial = !params.get('pagination[start]')
@@ -22,40 +25,51 @@ export const loader: LoaderFunction = async ({ request }) => {
     pagination: {
       start: params.get('pagination[start]') ?? 0,
       limit: params.get('pagination[limit]') ?? LIMIT
-    },sort: ['id:desc'] }, { encodeValuesOnly: true
+    }, sort: ['id:desc'] }, { encodeValuesOnly: true
   })
 
   const articles = (
     await (await fetch(`${url}/articles?${query}`)).json()
   )
 
+  if(topic){
+    const q = qs.stringify({
+      filters: { topic: { name: { $eq: topic } } }
+    }, { encodeValuesOnly: true })
+    
+    return json({
+      results: await(await fetch(`${url}/articles?${q}`)).json()
+    })
+  }
   if(series){
     const series = await fetch(`${url}/series`)
     return json({ series: await series.json() })
   }
   if(initial){
     return json({
-      articles, topics: await fetch(`${url}/topics`)
+      articles, topics: await(await fetch(`${url}/topics`)).json()
     })
   }
   return json({ articles })
 }
-
-export const links = () => [
-  ...CardLinks(), { rel: 'stylesheet', href: styles }
-]
 
 export default function Index() {
   const initialData = useLoaderData()
 
   const [ category, setCategory ] = useState<SearchCategory>('articles')
   const [ articles, setArticles ] = useState<ArticleDocument[]>(initialData.articles.data)
+  const [ results, setResults ] = useState<ArticleDocument[]>([])
   const [ series, setSeries ] = useState<Series[]>([])
-  const [ topics, setTopics ] = useState<string[]>(initialData.topics.data)
+  const [ topics ] = useState<string[]>(initialData.topics.data)
+  const [ topic, setTopic ] = useState<DropdownItem>()
   const [ start, setStart ] = useState<number>(LIMIT)
 
   const { bottom } = useScrollBottom()
   const { data, load, state } = useFetcher()
+
+  useEffect(() => {
+    load(`/?index&topic=${topic?.value}`)
+  }, [topic])
 
   useEffect(() => {
     if(category === 'series' && !series.length){
@@ -74,7 +88,10 @@ export default function Index() {
   }, [bottom])
 
   useEffect(() => {
-    if(data){      
+    if(data){
+      if('results' in data){
+        setResults(data.results.data)
+      }
       if('series' in data){
         setSeries(data.series.data)
       }
@@ -89,10 +106,29 @@ export default function Index() {
     setCategory(tab)
   }
 
+  const handleTopicChange = (topic: DropdownItem) => {
+    setTopic(topic)
+    
+    if(isProduction){
+      // GA4?.gtag('event', 'topic_select', {
+      //   topic: topic.value
+      // })
+    }
+  }
+
+  const articleList = (): ArticleDocument[] | undefined => {
+    if(category === 'articles'){
+      return articles
+    }
+    if(category === 'topics'){
+      return results
+    }
+  }
+
   return (
-    <div className='home'>
+    <div className='py-12 px-6'>
       <div
-        className='tabs'
+        className={styles.tabs}
         role='tablist'
         aria-label='Select a category'>
           {
@@ -101,8 +137,7 @@ export default function Index() {
 
               return (
                 <button
-                  key={id}
-                  className='tab'
+                  key={id} className={styles.tab}
                   role='tab'
                   aria-labelledby={id}
                   aria-selected={c === category}
@@ -115,17 +150,47 @@ export default function Index() {
           }
       </div>
 
-      <Show when={state === 'loading'}>
-        <div className='loading'>
-          <small>Loading data...</small>
-        </div>
+      <Show when={category === 'topics'}>
+        <Dropdown
+          className='mx-auto max-w-[368px] mb-8'
+          selected={topic}
+          onChange={handleTopicChange}
+          placeholder='Select topic'
+          ariaLabel='Topics'
+          list={
+            topics?.map((topic: any, i) => ({
+              id: i,
+              value: topic.attributes.name
+            })
+          )}
+        />
       </Show>
 
-      <div role='feed' aria-label='Latest articles'>
-        <div role='grid'>
-          <Show when={category === 'articles'}>
+      <Show when={
+        state === 'loading' && category === 'series' ||
+        state === 'loading' && category === 'topics'
+      }>
+        <Spinner
+          visible
+          color='#7570FA'
+          stroke={2}
+          radius={30}
+          className='mx-auto my-6'
+        />
+      </Show>
+
+      <div className={styles.gridContainer}
+        role='feed'
+        aria-label='Latest articles'>
+
+        <div className={styles.grid}
+          aria-busy={state === 'loading'}
+          aria-label='Article feed'
+          role='grid'>
+
+          <Show when={category === 'articles' || category == 'topics'}>
             {
-              articles?.map((article: any) => {
+              articleList()?.map((article: any) => {
                 const { id, attributes } = article
                 const { author, topic } = attributes
                 
@@ -168,6 +233,16 @@ export default function Index() {
           </Show>
         </div>
       </div>
+
+      <Show when={state === 'loading' && category === 'articles'}>
+        <Spinner
+          visible
+          color='#7570FA'
+          stroke={2}
+          radius={30}
+          className='mx-auto mt-6'
+        />
+      </Show>
     </div>
   )
 }
