@@ -1,6 +1,6 @@
 import { LoaderFunction, json } from '@remix-run/node'
 import { useLoaderData, useFetcher } from '@remix-run/react'
-import { Card, Show, Dropdown } from '~/components'
+import { Card, Show, Dropdown, ScrollTop } from '~/components'
 import { isSeries } from '~/utils'
 import { useScrollBottom } from '~/hooks'
 import { useState, useEffect } from 'react'
@@ -242,6 +242,8 @@ export default function Index() {
           className='mx-auto mt-6'
         />
       </Show>
+
+      <ScrollTop />
     </div>
   )
 }

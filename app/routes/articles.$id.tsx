@@ -1,6 +1,6 @@
 import { LoaderFunction, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { Show } from '~/components'
+import { Show, ScrollTop } from '~/components'
 import { isSeries } from '~/utils'
 import { styles } from '~/styles/routes/article'
 
@@ -80,6 +80,8 @@ export default function ArticlePage(){
             .map((p: string, i: number) => <p className={styles.p} key={i}>{p}</p>)
           }
         </section>
+
+        <ScrollTop />
       </main>
     </article>
   )

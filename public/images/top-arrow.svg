@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="20px" viewBox="0 0 19 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Articles-Copy-4" transform="translate(-711.000000, -1101.000000)" stroke="#FFFFFF" stroke-width="1.875">
+            <g id="Regular" transform="translate(712.500000, 1102.500000)">
+                <line x1="8" y1="17" x2="8" y2="0" id="Shape"></line>
+                <polyline id="Shape" points="16 7.93333333 8 0 0 7.93333333"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
