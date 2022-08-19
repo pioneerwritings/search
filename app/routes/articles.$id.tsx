@@ -1,7 +1,8 @@
-import { LoaderFunction, LinksFunction, json } from '@remix-run/node'
+import { LoaderFunction, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { Show } from '~/components'
 import { isSeries } from '~/utils'
+import { styles } from '~/styles/routes/article'
 
 export const loader: LoaderFunction = async ({ params }) => { 
   const id  = params.id as string
@@ -59,14 +60,14 @@ export default function ArticlePage(){
   const authorName = author.data.attributes.name
 
   return (
-    <article className='article'>
-      <main role='main'>
-        <h1 className='title'>{title}</h1>
-        <p className='featured'>{periodicalName}</p>
-        <address className='author'>By {authorName}</address>
+    <article className={styles.article}>
+      <main className={styles.main} role='main'>
+        <h1 className={styles.h1}>{title}</h1>
+        <p className={styles.periodical}>{periodicalName}</p>
+        <address className={styles.author}>By {authorName}</address>
 
         <Show when={!!subtitle}>
-          <small className='subtitle'>
+          <small className={styles.subtitle}>
             {subtitle}
           </small>
         </Show>
@@ -76,7 +77,7 @@ export default function ArticlePage(){
             body
             .split('\n')
             .filter((p: string) => p !== '')
-            .map((p: string, i: number) => <p key={i}>{p}</p>)
+            .map((p: string, i: number) => <p className={styles.p} key={i}>{p}</p>)
           }
         </section>
       </main>
