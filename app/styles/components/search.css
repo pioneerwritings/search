@@ -1,0 +1,73 @@
+
+.search-modal {
+  width: 100%;
+}
+
+.aa-DetachedContainer--modal .aa-PanelLayout {
+  padding: 0;
+}
+
+.search-modal::backdrop {
+  background: rgba(0,0,0,0.1);
+  backdrop-filter: blur(8px);
+}
+
+.aa-DetachedContainer--modal {
+  border-radius: 0.75rem;
+  top: 12%;
+}
+
+.aa-Form {
+  border: none;
+}
+
+.aa-DetachedCancelButton {
+  margin: 0;
+  display: none;
+}
+
+.aa-Source {
+  margin-top: -16px;
+}
+
+.aa-Form:focus-within, .aa-Form:focus {
+  box-shadow: none;
+}
+
+.aa-SubmitButton {
+  margin: 0 6px 0 0;
+}
+
+.aa-Label svg, .aa-LoadingIndicator svg {
+  width: 28px;
+  max-height: 21px;
+  color: black;
+  stroke-width: 1.2;
+}
+
+.aa-Item {
+  padding: 0;
+  min-height: 80px;
+  padding: 1.5rem;
+  border-bottom: 1px solid #EFEFEF;
+  color: #767684;
+  border-radius: 0;
+}
+
+.aa-Item[aria-selected='true']{
+  background-color: #FAFAFB;
+}
+
+.aa-Item mark {
+  color: #3E3BC9;
+  background-color: #EAEAFD;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 0 2px 2px 2px;
+}
+
+@media screen and (min-width: 680px) {
+  .aa-Item {
+    padding: 0 1.5rem;
+  }
+}

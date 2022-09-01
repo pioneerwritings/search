@@ -1,8 +1,12 @@
 import { LoaderFunction, json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useLocation } from '@remix-run/react'
+import { useEffect, useRef } from 'react'
 import { Show, ScrollTop } from '~/components'
 import { isSeries } from '~/utils'
-import { styles } from '~/styles/routes/article'
+import { styles } from '~/styles/routes/article/article'
+
+import markStyles from '~/styles/routes/article/mark.css'
+import Highlight from 'mark.js'
 
 export const loader: LoaderFunction = async ({ params }) => { 
   const id  = params.id as string
@@ -51,13 +55,43 @@ export const loader: LoaderFunction = async ({ params }) => {
   })
 }
 
+export const links = () => [
+  { rel: 'stylesheet', href: markStyles }
+]
+
 export default function ArticlePage(){
   const { article, series } = useLoaderData()
+  const { state } = useLocation()
+
   const { data: { attributes } } = article
   const { title, subtitle, author, body, periodical } = attributes
 
   const periodicalName = periodical.data.attributes.name
   const authorName = author.data.attributes.name
+  const bodyRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if(bodyRef.current && state?.query){
+      const query = state.query
+
+      new Highlight(bodyRef.current).mark(
+        query, {
+        diacritics: true,
+        ignorePunctuation: [`'`, `"`],
+
+        accuracy: {
+          value: 'exactly',
+          limiters: [',', '.', '?', '!', ';', ':', '-', '—']
+        },
+        filter: (node, term, totalCounter, counter) => {
+          return (
+            query.split(' ').includes(term) && 
+            counter > 35 ? false : true
+          )
+        }
+      })
+    }
+  }, [state])
 
   return (
     <article className={styles.article}>
@@ -72,14 +106,16 @@ export default function ArticlePage(){
           </small>
         </Show>
 
-        <section className='body'>
+        <div className='body' ref={bodyRef}>
           {
             body
             .split('\n')
             .filter((p: string) => p !== '')
-            .map((p: string, i: number) => <p className={styles.p} key={i}>{p}</p>)
+            .map((p: string, i: number) => {
+              return (<p className={styles.p} key={i}>{p}</p>)
+            })
           }
-        </section>
+        </div>
 
         <ScrollTop />
       </main>

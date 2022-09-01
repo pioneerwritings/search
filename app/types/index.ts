@@ -1,4 +1,8 @@
 
+export interface CustomWindow extends Window {
+  env: { [k: string]: string }
+}
+
 export interface ArticleDocument {
   id: string
   slug: string

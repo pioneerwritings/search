@@ -10,16 +10,18 @@ export const styles = {
     justify-between
   `,
   tab: `
-    position:relative
-    after:h-0.5
+    w-20
+    h-full
+    relative
     after:w-0
-    aria-selected:after:position:absolute
+    aria-selected:after:absolute
     aria-selected:after:content-""
-    aria-selected:after:bottom-2
+    aria-selected:after:bottom-1
     aria-selected:after:h-0.5
     aria-selected:after:w-6
     aria-selected:after:bg-indigo
     aria-selected:font-bold
+    aria-selected:text-indigo
     transition-all
     after:transition-all
     flex-1
@@ -28,14 +30,15 @@ export const styles = {
     justify-center
     items-center
     box-border
-    text-indigo
+    text-ash
     focus:bg-cornflower
     focus:bg-opacity-5
     focus:outline-dashed
     focus:outline-1
+    focus:outline-indigo
     focus:font-bold
-    hover:bg-cornflower/5
-    rounded-sm
+    aria-selected:bg-cornflower/5
+    rounded-md
     text-sm
   `,
   gridContainer: `

@@ -1,5 +1,5 @@
 import { type MouseEvent, type KeyboardEvent, useState } from 'react'
-import { DropdownItem } from '~/types'
+import { type DropdownItem } from '~/types'
 
 export interface DropdownProps {
   list: DropdownItem[]
@@ -118,7 +118,7 @@ export const Dropdown = ({ list, placeholder, onChange, className, selected, ari
           src='/images/carrot.svg'
           alt=''
           aria-hidden='true'
-          className={`rotate-${expanded ? '180' : '0'} transition-transform`}
+          className={`rotate-${expanded ? '180' : '0'} transition-transform transform-gpu`}
         />
       </div>
 

@@ -1,4 +1,4 @@
-import type { LinksFunction, MetaFunction } from '@remix-run/node'
+import { json, LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node'
 import type { ErrorBoundaryComponent } from '@remix-run/node'
 
 import {
@@ -8,11 +8,19 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData
 } from '@remix-run/react'
 
-import { Header, Footer } from './components'
+import { RecoilRoot } from 'recoil'
+import { Header, Footer, Search } from './components'
 import { rootStyles } from './styles/root'
+import { links as algoliaSearchLinks } from '~/components/search'
+
 import styles from './styles/app.css'
+
+interface LoaderResponse {
+  env: Record<string, string | undefined>
+}
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -24,10 +32,25 @@ export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
   { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap' },
-  { rel: 'stylesheet', href: styles }
+  { rel: 'stylesheet', href: styles },
+  ...algoliaSearchLinks()
 ]
 
+export const loader: LoaderFunction = async () => {
+  return json<LoaderResponse>({
+    env: {
+      STRAPI_API_URL: process.env.STRAPI_API_URL,
+      PREVIEW_SECRET: process.env.PREVIEW_SECRET,
+      ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
+      ALGOLIA_SEARCH_KEY: process.env.ALGOLIA_SEARCH_KEY,
+      ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY
+    }
+  })
+}
+
 export default function App() {
+  const data = useLoaderData<LoaderResponse>()
+
   return (
     <html lang='en-US'>
       <head>
@@ -36,12 +59,20 @@ export default function App() {
       </head>
       
       <body>
-        <div className={rootStyles}>
-          <Header />
-          <Outlet />
-          <Footer />
-        </div>
+        <RecoilRoot>
+          <div className={rootStyles}>
+            <Search />
+            <Header />
+            <Outlet />
+            <Footer />
+          </div>
+        </RecoilRoot>
         <ScrollRestoration />
+        <script
+          dangerouslySetInnerHTML={{__html: 
+            `window.env = ${JSON.stringify(data.env)}`
+          }}>
+        </script>
         <Scripts />
         <LiveReload />
       </body>
@@ -62,14 +93,17 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 
       <body>
         <div className='error-boundary'>
-          <span className='overlay'>
+          <span className='mx-auto'>
             <img
+              className='mx-auto mt-16 mb-6'
               src='/images/500.png'
               alt='A picture of the 10 horned leopard beast described in Daniel chapter 7.'
               tabIndex={0}
             />
           </span>
-          <p role='alert'>Oh no! Something went terribly wrong.</p>
+          <p role='alert' className='text-center font-bold'>
+            Oh no! Something went terribly wrong.
+          </p>
         </div>
         <Scripts />
       </body>

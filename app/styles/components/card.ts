@@ -5,6 +5,7 @@ export const styles = {
     border
     border-solid
     max-w-[368px]
+    w-full
     h-full
     px-4
     pt-4

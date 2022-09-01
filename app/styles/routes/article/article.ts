@@ -4,6 +4,7 @@ export const styles = {
     w-full
     py-16
     px-8
+    antialiased
   `,
   main: `
     max-w-[600px]

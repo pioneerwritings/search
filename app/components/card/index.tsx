@@ -31,7 +31,7 @@ export const Card = ({
   }
 
   return (
-    <Link to={`/articles/${id}`} className='max-w-[368px]'>
+    <Link to={`/articles/${id}`} className='max-w-[368px] w-full'>
       <article
         className={styles.card}
         onKeyPress={handleKeypress}
