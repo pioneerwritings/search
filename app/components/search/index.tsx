@@ -41,7 +41,7 @@ export const Search = () => {
         <InstantSearch indexName='articles' searchClient={client}>
           <AutoComplete
             openOnFocus
-            detachedMediaQuery='(min-width: 100px)'
+            detachedMediaQuery=''
             active={state.active}
             onClose={handleClose}
             classNames={{
