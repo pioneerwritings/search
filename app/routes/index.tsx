@@ -1,11 +1,18 @@
-import { LoaderFunction, json } from '@remix-run/node'
+import { LoaderFunction } from '@remix-run/node'
 import { useLoaderData, useFetcher } from '@remix-run/react'
 import { Card, Show, Dropdown, ScrollTop } from '~/components'
-import { isSeries } from '~/utils'
+import { isSeries, normalizeArticle } from '~/utils'
 import { useScrollBottom } from '~/hooks'
 import { useState, useEffect } from 'react'
-import { ArticleDocument, Series, DropdownItem } from '~/types'
+import { fetchData } from '~/fetchers'
 import { styles } from '~/styles/home'
+
+import {
+  type Article,
+  type CMSArticleResponse,
+  type CMSTopic,
+  Series, DropdownItem
+} from '~/types'
 
 import Spinner from 'react-spinner-material'
 import qs from 'qs'
@@ -15,64 +22,55 @@ const LIMIT = 15
 
 export const loader: LoaderFunction = async ({ request }) => {
   const params = new URL(request.url).searchParams
-  const topic = params.get('topic')
-  const series = params.get('series')
-  const url = process.env.STRAPI_API_URL as string
-  const initial = !params.get('pagination[start]')
 
-  const query = qs.stringify({
+  const q = qs.stringify({
     pagination: {
       start: params.get('pagination[start]') ?? 0,
       limit: params.get('pagination[limit]') ?? LIMIT
     }, sort: ['id:desc'] }, { encodeValuesOnly: true
   })
 
-  const articles = (
-    await (await fetch(`${url}/articles?${query}`)).json()
-  )
+  const res = await fetchData<CMSArticleResponse>('articles', q)
 
-  if(topic){
-    const q = qs.stringify({
-      filters: { topic: { name: { $eq: topic } } }
-    }, { encodeValuesOnly: true })
-    
-    return json({
-      results: await(await fetch(`${url}/articles?${q}`)).json()
-    })
+  return {
+    articles: res.data.map(
+      normalizeArticle
+    )
   }
-  if(series){
-    const series = await fetch(`${url}/series`)
-    return json({ series: await series.json() })
-  }
-  if(initial){
-    return json({
-      articles, topics: await(await fetch(`${url}/topics`)).json()
-    })
-  }
-  return json({ articles })
+}
+
+type FetcherResponse = {
+  articles?: Article[]
+  topics?: CMSTopic[]
+  series?: Series[]
+  results?: Article[]
 }
 
 export default function Index() {
-  const initialData = useLoaderData()
+  const initialData = useLoaderData<{ articles: Article[]}>()
+  const { data, load, state } = useFetcher<FetcherResponse>()
 
   const [ category, setCategory ] = useState<SearchCategory>('articles')
-  const [ articles, setArticles ] = useState<ArticleDocument[]>(initialData.articles.data)
-  const [ results, setResults ] = useState<ArticleDocument[]>([])
-  const [ series, setSeries ] = useState<Series[]>([])
-  const [ topics ] = useState<string[]>(initialData.topics.data)
+  const [ articles, setArticles ] = useState<Article[]>(initialData.articles)
+  const [ results, setResults ] = useState<Article[]>()
+  const [ series, setSeries ] = useState<Series[]>()
+  const [ topics, setTopics ] = useState<string[]>([])
   const [ topic, setTopic ] = useState<DropdownItem>()
   const [ start, setStart ] = useState<number>(LIMIT)
 
-  const { bottom } = useScrollBottom()
-  const { data, load, state } = useFetcher()
+  const { bottom } = useScrollBottom()  
+
+  useEffect(() => load('/api/topics'), [])
 
   useEffect(() => {
-    load(`/?index&topic=${topic?.value}`)
+    if(topic){
+      load(`/api/results?topic=${topic.value}`)
+    }
   }, [topic])
 
   useEffect(() => {
-    if(category === 'series' && !series.length){
-      load('/?index&series=true')
+    if(category === 'series' && !series){
+      load('/api/series')
     }
   }, [category])
 
@@ -82,21 +80,26 @@ export default function Index() {
         ['pagination[start]', String(start)],
         ['pagination[limit]', String(LIMIT)]
       ])
-      load(`/?index&${qs}`)
+      load(`/?index?${qs}`)
     }
   }, [bottom])
 
   useEffect(() => {
-    if(data){
-      if('results' in data){
-        setResults(data.results.data)
+    if(data !== undefined){
+      if(data.topics){
+        setTopics(data.topics.map(({ attributes }) => {
+          return attributes.name
+        }))
       }
-      if('series' in data){
-        setSeries(data.series.data)
+      if(data.results){
+        setResults(data.results)
       }
-      if('articles' in data){
+      if(data.series){
+        setSeries(data.series)
+      }
+      if(data.articles){
         setStart(start + LIMIT)
-        setArticles(prev => [...prev, ...data.articles.data ])
+        setArticles([ ...articles, ...data.articles ])
       }
     }
   }, [data])
@@ -115,13 +118,14 @@ export default function Index() {
     // }
   }
 
-  const articleList = (): ArticleDocument[] | undefined => {
-    if(category === 'articles'){
-      return articles
-    }
-    if(category === 'topics'){
+  const articleList = (): Article[] | null => {
+    if(category === 'topics' && results){
       return results
     }
+    if(category === 'articles') {
+      return articles
+    }
+    return null
   }
 
   return (
@@ -156,12 +160,7 @@ export default function Index() {
           onChange={handleTopicChange}
           placeholder='Select topic'
           ariaLabel='Topics'
-          list={
-            topics?.map((topic: any, i) => ({
-              id: i,
-              value: topic.attributes.name
-            })
-          )}
+          list={topics.map((topic, i) => ({ id: i, value: topic }) )}
         />
       </Show>
 
@@ -189,20 +188,16 @@ export default function Index() {
 
           <Show when={category === 'articles' || category == 'topics'}>
             {
-              articleList()?.map((article: any) => {
-                const { id, attributes } = article
-                const { author, topic } = attributes
-                
-                const series = isSeries(attributes.title)
+              articleList()?.map((article) => {
+                const { id, title } = article
+                const series = isSeries(title)
 
                 return (
                   <Card
+                    {...article}
+                    type='articles'
+                    heading={title}
                     key={id}
-                    id={id}
-                    title={attributes.title}
-                    excerpt={attributes.excerpt}
-                    author={author.data.attributes.name}
-                    topic={topic.data.attributes.name}
                     seriesLabel={series ? 'Series' : ''}
                   />
                 )
@@ -212,19 +207,18 @@ export default function Index() {
 
           <Show when={category === 'series'}>
             {
-              series?.map((series: any) => {
-                const { id, attributes } = series
-                const { author, topic, articles } = attributes
+              series?.map(series => {
+                const { id, articles, name, description, ...s } = series
 
                 return (
                   <Card
-                    key={id}
+                    {...s}
+                    type='series'
+                    seriesLabel={`${articles.length} Parts`}
                     id={id}
-                    title={attributes.name}
-                    excerpt={attributes.description}
-                    author={author.data.attributes.name}
-                    topic={topic.data.attributes.name}
-                    seriesLabel={`${articles.data.length} Parts`}
+                    key={id}
+                    heading={name}
+                    excerpt={description}
                   />
                 )
               })

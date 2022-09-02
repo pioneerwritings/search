@@ -1,59 +1,50 @@
-import { KeyboardEvent } from 'react'
-import { truncateText } from '~/utils'
 import { Show } from '~/components'
 import { Link, useNavigate } from '@remix-run/react'
 import { styles } from '~/styles/components/card'
+import { Article } from '~/types'
+import { truncateText } from '~/utils'
 
-interface CardProps {
-  id: string
-  title: string
-  author: string
+type CardProps = Pick<Article, 'id' | 'author' | 'topic'> & {
+  heading: string
   excerpt: string
-  topic: string
-  seriesLabel?: string
+  type: 'articles' | 'series'
+  seriesLabel?: string  
 }
 
-export const Card = ({
-  id,
-  title,
-  author,
-  excerpt,
-  topic,
-  seriesLabel 
-}: CardProps) => {
-  const navigate = useNavigate()
-  const isSeries = !!seriesLabel
+export function Card<T extends CardProps>(props: T) {
+  const { id, type, author, topic, excerpt, heading, seriesLabel } = props
 
-  const handleKeypress = (e: KeyboardEvent<HTMLDivElement>) => {
-    const { attributes } = e.currentTarget
-    const id = attributes.getNamedItem('data-id')?.value
-    navigate(`/articles/${id}`)
-  }
+  const navigate = useNavigate()
+  const link = `/${type}/${id}`
+
+  const handleKeypress = () => navigate(link)
 
   return (
-    <Link to={`/articles/${id}`} className='max-w-[368px] w-full'>
+    <Link to={link} className='max-w-[368px] w-full'>
       <article
         className={styles.card}
         onKeyPress={handleKeypress}
-        data-id={id}
-        data-is-series={isSeries ? true : false}
-        aria-label={title}
+        aria-label={heading}
         aria-describedby={id}
         tabIndex={0}>
+
         <header className={styles.header}>
           <small className={styles.author}>
             {author}
           </small>
     
-          <Show when={isSeries}>
+          <Show when={!!seriesLabel}>
             <small className={styles.series}>
               {seriesLabel}
             </small>
           </Show>
         </header>
 
-        <h2 className={styles.h2}>{title}</h2>
-        <p className={styles.p} id={id}>{truncateText(excerpt, 70)}</p>
+        <h2 className={styles.h2}>{heading}</h2>
+
+        <p className={styles.p} id={id}>
+          {truncateText(excerpt, 70)}
+        </p>
 
         <small className={styles.topic}>
           {topic}
@@ -61,4 +52,4 @@ export const Card = ({
       </article>
     </Link>
   )
-} 
+}
