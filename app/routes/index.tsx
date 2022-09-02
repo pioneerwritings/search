@@ -80,7 +80,7 @@ export default function Index() {
         ['pagination[start]', String(start)],
         ['pagination[limit]', String(LIMIT)]
       ])
-      load(`/?index?${qs}`)
+      load(`/?index&${qs}`)
     }
   }, [bottom])
 
