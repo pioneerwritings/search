@@ -18,8 +18,8 @@ export const isSeries = (str: string): boolean | string => {
 }
 
 
-export const normalizeArticle = (response: CMSArticle): Article => {
-  const { id, attributes } = response
+export const normalizeArticle = (article: CMSArticle): Article => {
+  const { id, attributes } = article
   const { title, subtitle, body, slug, excerpt } = attributes
 
   const author = attributes.author.data.attributes.name
