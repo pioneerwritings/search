@@ -26,6 +26,7 @@ interface CMSRelation {
 }
 
 interface CMSArticleAttributes {
+  id: string
   title: string
   subtitle?: string
   slug: string
@@ -71,9 +72,21 @@ export interface CMSResponse<T> {
     }
   }
 }
+export interface CMSSingleResponse<T> {
+  data: T,
+  meta?: {
+    pagination?: {
+      start: number
+      limit: number
+      total: number
+    }
+  }
+}
 
 export type CMSTopicResponse = CMSResponse<CMSTopic>
 export type CMSArticleResponse = CMSResponse<CMSArticle>
+export type CMSSingleArticleResponse = CMSSingleResponse<CMSArticle>
+export type CMSSingleSeriesResponse = CMSSingleResponse<CMSSeries>
 export type CMSSeriesResponse = CMSResponse<CMSSeries>
 
 export interface Article extends BaseDocument, CMSArticleAttributes {
@@ -87,5 +100,5 @@ export type ArticleCard = BaseDocument & Pick<Article, 'title' | 'author' | 'top
 export interface Series extends BaseDocument, CMSSeriesAttributes {
   author: string
   topic: string
-  articles: Pick<CMSArticleAttributes, 'title' | 'excerpt'>[]
+  articles: Pick<CMSArticleAttributes, 'id' | 'title' | 'excerpt'>[]
 }
