@@ -2,7 +2,8 @@
 export const styles = {
   article: `
     w-full
-    py-16
+    pt-16
+    pb-36
     px-8
     antialiased
   `,
