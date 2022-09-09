@@ -3,7 +3,6 @@ export const styles = {
     transition-all
     rounded-lg
     border
-    border-solid
     max-w-[368px]
     w-full
     h-full
@@ -15,6 +14,14 @@ export const styles = {
     bg-white
     lg:hover:shadow-lg
     lg:hover:shadow-cornflower/40
+    lg:hover:border-indigo/70
+    lg:hover:scale-105
+    lg:active:scale-100
+    lg:focus:shadow-lg
+    lg:focus:shadow-cornflower/40
+    lg:focus:border-indigo/70
+    lg:focus:outline-0
+    lg:focus:scale-105
   `,
   header: `
     flex
