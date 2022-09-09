@@ -1,54 +1,66 @@
 import { LoaderFunction, json } from '@remix-run/node'
-import { useLoaderData, useLocation } from '@remix-run/react'
+import { useLoaderData, useNavigate, useLocation } from '@remix-run/react'
 import { useEffect, useRef } from 'react'
 import { Show, ScrollTop } from '~/components'
-import { isSeries } from '~/utils'
+import { isSeries, normalizeArticle, normalizeSeries } from '~/utils'
 import { styles } from '~/styles/routes/article/article'
+import { CMSSingleArticleResponse, Article, CMSSeriesResponse } from '~/types'
+import { fetchData } from '~/fetchers'
 
 import markStyles from '~/styles/routes/article/mark.css'
 import Highlight from 'mark.js'
 
-export const loader: LoaderFunction = async ({ params }) => { 
-  const id  = params.id as string
-  const url = process.env.STRAPI_API_URL as string
-  const res = await fetch(`${url}/articles/${id}`)
+interface LoaderResponse {
+  article: Article
+  series?: {
+    prev: string | null
+    next: string | null
+  }
+}
 
-  const article = await res.json()
-  const title: string = article.data.attributes.title
+interface LocationState {
+  query?: string
+}
+
+export const loader: LoaderFunction = async ({ params }) => { 
+  const res = await fetchData<CMSSingleArticleResponse>(
+    `articles/${params.id}`
+  )
+
+  const article = normalizeArticle(res.data)
+  const title = article?.title
   
   if(!isSeries(title)){
     return json({ article })
   }
 
   const name   = title.split('—').filter(str => !Number(str)).join('—').trim()
-  const res2   = await fetch(`${url}/series?filters[name][$eq]=${name.trim()}`)
-  const series = await res2.json()
+  const res2   = (await fetchData<CMSSeriesResponse>('series', `filters[name][$eq]=${name.trim()}`)).data
+  const series = normalizeSeries(res2[0])
 
-  if(!series.data.length){
+  if(!series){
     return json({ article })
   }
-  const num = series.data[0].attributes.articles.data.findIndex((a: any) => a.attributes.title === title) + 1
-  const len = series?.data[0].attributes.articles.data.length
+  const num = series.articles.findIndex((a) => a.title === title) + 1
+  const len = series.articles.length
 
   const prevArticle = (): string | null => {
     if(num > 1){
       const index = num - 2
-      return series.data[0].attributes.articles.data[index].id
+      return series.articles[index].id
     }
     return null
   }
 
   const nextArticle = (): string | null => {
     if(num < len){
-      return series.data[0].attributes.articles.data[num].id
+      return series.articles[num].id
     }
     return null
   }
 
-  return json({
-    article,
-    
-    series: {
+  return json<LoaderResponse>({
+    article, series: {
       prev: prevArticle(),
       next: nextArticle()
     }
@@ -60,19 +72,16 @@ export const links = () => [
 ]
 
 export default function ArticlePage(){
-  const { article, series } = useLoaderData()
-  const { state } = useLocation()
+  const { article, series } = useLoaderData<LoaderResponse>()
+  const { state } = useLocation<LocationState>()
+  const { title, subtitle, author, body, periodical } = article
 
-  const { data: { attributes } } = article
-  const { title, subtitle, author, body, periodical } = attributes
-
-  const periodicalName = periodical.data.attributes.name
-  const authorName = author.data.attributes.name
+  const navigate = useNavigate()
   const bodyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if(bodyRef.current && state?.query){
-      const query = state.query
+      const { query } = state
 
       new Highlight(bodyRef.current).mark(
         query, {
@@ -93,12 +102,24 @@ export default function ArticlePage(){
     }
   }, [state])
 
+  const handlePrevClick = () => {
+    if(series?.prev){
+      navigate(`/articles/${series.prev}`)
+    }
+  }
+
+  const handleNextClick = () => {
+    if(series?.next){
+      navigate(`/articles/${series.next}`)
+    }
+  }
+
   return (
     <article className={styles.article}>
       <main className={styles.main} role='main'>
         <h1 className={styles.h1}>{title}</h1>
-        <p className={styles.periodical}>{periodicalName}</p>
-        <address className={styles.author}>By {authorName}</address>
+        <p className={styles.periodical}>{periodical}</p>
+        <address className={styles.author}>By {author}</address>
 
         <Show when={!!subtitle}>
           <small className={styles.subtitle}>
@@ -115,6 +136,67 @@ export default function ArticlePage(){
               return (<p className={styles.p} key={i}>{p}</p>)
             })
           }
+        </div>
+
+        <Show when={!!series}>
+          <section className={styles.seriesPagerButtons}>
+            <button
+              onClick={handlePrevClick}
+              className={styles.seriesPagerButton}
+              aria-label='Go to the previous article in the series'
+              disabled={!series?.prev}
+              aria-disabled={!series?.prev}>
+              <img
+                className='mr-4'
+                width={24}
+                height={12}
+                src='/images/left-arrow.svg'
+                aria-hidden
+                alt=''
+              />
+              Prev Article
+            </button>
+
+            <button
+              onClick={handleNextClick}
+              className={styles.seriesPagerButton}
+              aria-label='Go to the next article in the series'
+              disabled={!series?.next}
+              aria-disabled={!series?.next}>
+              Next Article
+
+              <img
+                className='ml-4'
+                width={24}
+                height={12}
+                src='/images/right-arrow.svg'
+                aria-hidden
+                alt=''
+              />
+            </button>
+          </section>
+        </Show>
+        
+        <div className={styles.studyPrayShareContainer}>
+          <h2 className={styles.studyPrayShareH2}>
+            Study. Pray. <span className='text-indigo'>Share.</span>
+          </h2>
+
+          <div className={styles.studyPrayShareButtons}>
+            <button
+              type='button'
+              aria-label='Copy this article link to share'
+              className={`first:mr-4 ${styles.studyPrayShareButton}`}>
+              <img src='/images/link-icon-white.svg' />
+            </button>
+
+            <button
+              type='button'
+              aria-label='Share this article on Facebook'
+              className={styles.studyPrayShareButton}>
+              <img src='/images/fb-icon-white.svg' />
+            </button>
+          </div>
         </div>
 
         <ScrollTop />
