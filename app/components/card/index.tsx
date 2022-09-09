@@ -20,7 +20,7 @@ export function Card<T extends CardProps>(props: T) {
   const handleKeypress = () => navigate(link)
 
   return (
-    <Link to={link} className='max-w-[368px] w-full'>
+    <Link to={link} className='max-w-[368px] w-full' tabIndex={-1}>
       <article
         className={styles.card}
         onKeyPress={handleKeypress}
