@@ -4,9 +4,9 @@ export const styles = `
   bottom-10
   right-10
   rounded-full
-  bg-cornflower
-  hover:shadow-lg
-  hover:shadow-cornflower/40
+  bg-black
+  hover:shadow-lg hover:shadow-indigo
+  hover:scale-110 active:scale-100 transform-gpu
   flex
   items-center
   justify-center
