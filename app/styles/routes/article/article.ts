@@ -2,6 +2,7 @@
 export const styles = {
   article: `
     w-full
+    min-h-screen
     pt-16
     pb-36
     px-8
