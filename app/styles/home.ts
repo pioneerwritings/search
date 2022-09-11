@@ -1,5 +1,10 @@
 
 export const styles = {
+  page: `
+    py-12 
+    px-6 
+    min-h-screen
+  `,
   tabs: `
     max-w-xs
     h-8

@@ -129,7 +129,7 @@ export default function Index() {
   }
 
   return (
-    <div className='py-12 px-6'>
+    <div className={styles.page}>
       <div
         className={styles.tabs}
         role='tablist'
