@@ -1241,6 +1241,10 @@ video {
   padding-left: 3rem;
 }
 
+.pl-6 {
+  padding-left: 1.5rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -1658,6 +1662,10 @@ video {
     flex-direction: row;
   }
 
+  .md\:justify-center {
+    justify-content: center;
+  }
+
   .md\:justify-between {
     justify-content: space-between;
   }
@@ -1668,6 +1676,10 @@ video {
 
   .md\:border-l {
     border-left-width: 1px;
+  }
+
+  .md\:p-0 {
+    padding: 0px;
   }
 
   .md\:px-8 {
