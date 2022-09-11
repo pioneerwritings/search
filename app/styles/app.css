@@ -904,6 +904,10 @@ video {
   max-width: 600px;
 }
 
+.max-w-screen-sm {
+  max-width: 640px;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -1319,6 +1323,11 @@ video {
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
+.text-cornflower {
+  --tw-text-opacity: 1;
+  color: rgb(114 117 240 / var(--tw-text-opacity));
 }
 
 .antialiased {
