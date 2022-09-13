@@ -1,7 +1,8 @@
 import { CustomWindow } from '~/types'
+import { isServer } from '~/config'
 
 declare const window: CustomWindow
-const env = typeof document !== 'undefined' ? window.env : process.env
+const env = !isServer ? window.env : process.env
 
 export const fetchData = async <T>(type: string, query?: string) => {
   const url = `${env.STRAPI_API_URL}/${type}`
