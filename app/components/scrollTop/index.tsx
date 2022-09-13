@@ -8,7 +8,7 @@ export const ScrollTop = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPos = window.scrollY
-      setVisible(scrollPos >= 250)
+      setVisible(scrollPos >= 200)
     }
 
     window.addEventListener(
