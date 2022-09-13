@@ -43,7 +43,8 @@ export const loader: LoaderFunction = async () => {
       PREVIEW_SECRET: process.env.PREVIEW_SECRET,
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
       ALGOLIA_SEARCH_KEY: process.env.ALGOLIA_SEARCH_KEY,
-      ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY
+      ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
+      PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID
     }
   })
 }
