@@ -22,4 +22,25 @@ export const styles = {
   description: `
     text-center text-ash max-w-[400px] mx-auto
   `,
+  input: `
+    border
+    border-gray-500
+    mt-6
+    w-full
+    h-12
+    rounded-lg
+    px-4
+    outline-indigo
+  `,
+  continueButton: `
+    flex
+    items-center
+    mt-6
+    mx-auto
+    disabled:opacity-30
+    disabled:cursor-not-allowed
+  `,
+  goHome: `
+    flex text-black no-underline mt-6 hover:underline
+  `
 }

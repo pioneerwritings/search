@@ -1,5 +1,14 @@
 import { CMSSeries, CMSArticle, Article, Series  } from "~/types"
 
+export const formatValue = (val: number): string => {
+  return (val / 100).toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })
+}
+
 export const truncateText = (text: string, limit: number): string => {
   if(text?.length > limit){
     return text.trim().substring(0, limit) + '...'
