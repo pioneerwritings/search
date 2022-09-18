@@ -210,14 +210,14 @@ export default function ArticlePage(){
               type='button'
               aria-label='Copy this article link to share'
               className={`mx-4 ${styles.studyPrayShareButton}`}>
-              <img src='/images/link-icon-white.svg' />
+              <img src='/images/link-icon.svg' />
             </button>
 
             <button
               type='button'
               aria-label='Share this article on Facebook'
               className={styles.studyPrayShareButton}>
-              <img src='/images/fb-icon-white.svg' />
+              <img src='/images/fb-icon.svg' />
             </button>
           </div>
         </div>
