@@ -1,11 +1,14 @@
 import { LoaderFunction, json } from '@remix-run/node'
 import { useLoaderData, useNavigate, useLocation } from '@remix-run/react'
 import { useEffect, useRef } from 'react'
-import { Show, ScrollTop } from '~/components'
+import { Show } from '~/components'
 import { isSeries, normalizeArticle, normalizeSeries } from '~/utils'
 import { styles } from '~/styles/routes/article/article'
 import { CMSSingleArticleResponse, Article, CMSSeriesResponse } from '~/types'
+import { useScrollBottom } from '~/hooks'
 import { fetchData } from '~/fetchers'
+import { useRecoilState } from 'recoil'
+import { footerState as FooterState } from '~/state'
 
 import markStyles from '~/styles/routes/article/mark.css'
 import Highlight from 'mark.js'
@@ -13,6 +16,8 @@ import Highlight from 'mark.js'
 interface LoaderResponse {
   article: Article
   series?: {
+    name: string
+    part: string
     prev: string | null
     next: string | null
   }
@@ -29,6 +34,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   const article = normalizeArticle(res.data)
   const title = article?.title
+  const part = isSeries(title) as string
   
   if(!isSeries(title)){
     return json({ article })
@@ -61,6 +67,8 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   return json<LoaderResponse>({
     article, series: {
+      name,
+      part,
       prev: prevArticle(),
       next: nextArticle()
     }
@@ -74,10 +82,19 @@ export const links = () => [
 export default function ArticlePage(){
   const { article, series } = useLoaderData<LoaderResponse>()
   const { state } = useLocation<LocationState>()
+  const [ _, setFooterState] = useRecoilState(FooterState)
+  const { bottom } = useScrollBottom()
   const { title, subtitle, author, body, periodical } = article
 
   const navigate = useNavigate()
   const bodyRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setFooterState({
+      active: true,
+      bottom
+    })
+  }, [bottom])
 
   useEffect(() => {
     if(bodyRef.current && state?.query){
@@ -117,7 +134,13 @@ export default function ArticlePage(){
   return (
     <article className={styles.article}>
       <main className={styles.main} role='main'>
-        <h1 className={styles.h1}>{title}</h1>
+        <Show when={!!series}>
+          <span className={styles.badge}>
+            {`Part ${series?.part}`}
+          </span>
+        </Show>
+
+        <h1 className={styles.h1}>{series?.name || title}</h1>
         <p className={styles.periodical}>{periodical}</p>
         <address className={styles.author}>By {author}</address>
 
@@ -186,7 +209,7 @@ export default function ArticlePage(){
             <button
               type='button'
               aria-label='Copy this article link to share'
-              className={`first:mr-4 ${styles.studyPrayShareButton}`}>
+              className={`mx-4 ${styles.studyPrayShareButton}`}>
               <img src='/images/link-icon-white.svg' />
             </button>
 
@@ -198,8 +221,6 @@ export default function ArticlePage(){
             </button>
           </div>
         </div>
-
-        <ScrollTop />
       </main>
     </article>
   )
