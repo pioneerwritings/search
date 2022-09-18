@@ -1,5 +1,10 @@
-import { json, LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node'
-import type { ErrorBoundaryComponent } from '@remix-run/node'
+import {
+  type ErrorBoundaryComponent,
+  type LinksFunction, 
+  type LoaderFunction,
+  json, 
+  MetaFunction 
+} from '@remix-run/node'
 
 import {
   Links,
