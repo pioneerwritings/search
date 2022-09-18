@@ -1,15 +1,17 @@
 
 export const styles = `
-  fixed
-  bottom-10
-  right-10
+  w-12
+  h-12
+  shrink-0
   rounded-full
   bg-black
+  transform-gpu
+  shadow-md
+  shadow-gray-500
   hover:shadow-lg hover:shadow-indigo
-  hover:scale-110 active:scale-100 transform-gpu
+  hover:scale-110 active:scale-100 shadow-md
   flex
   items-center
   justify-center
   transition-all
-  origin-center
 `

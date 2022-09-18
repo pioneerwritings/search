@@ -9,8 +9,23 @@ export const styles = {
     antialiased
   `,
   main: `
+    flex
+    flex-col
+    justify-center
     max-w-[600px]
     mx-auto
+  `,
+  badge: `
+    text-center 
+    inline-block 
+    mb-6 
+    text-indigo 
+    font-bold 
+    bg-cornflower/10 
+    mx-auto 
+    px-4 
+    py-1 
+    rounded-full
   `,
   h1: `
     leading-tight
@@ -18,6 +33,7 @@ export const styles = {
     font-heldane-bold
     text-3xl
     md:text-[2.5rem]
+    md:leading-[1]
     antialiased
   `,
   author: `
@@ -29,6 +45,7 @@ export const styles = {
     text-center
     font-light
     mt-1
+    md:mt-4
     md:text-xl
   `,
   subtitle: `
@@ -96,7 +113,7 @@ export const styles = {
   `,
   studyPrayShareButton: `
     rounded-full 
-    bg-black 
+    bg-white
     flex 
     items-center 
     justify-center 
@@ -104,10 +121,12 @@ export const styles = {
     h-10 
     cursor-pointer 
     hover:shadow-lg 
-    hover:shadow-indigo 
+    hover:shadow-ash 
     transition-all 
     hover:scale-110 
     active:scale-100 
     transform-gpu
+    border
+    border-gray-300
   `
 }
