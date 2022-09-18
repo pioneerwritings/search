@@ -1,17 +1,20 @@
 import { LoaderFunction } from '@remix-run/node'
 import { useLoaderData, useFetcher } from '@remix-run/react'
-import { Card, Show, Dropdown, ScrollTop } from '~/components'
+import { Card, Show, Dropdown } from '~/components'
+import { useRecoilState } from 'recoil'
 import { isSeries, normalizeArticle } from '~/utils'
 import { useScrollBottom } from '~/hooks'
 import { useState, useEffect } from 'react'
 import { fetchData } from '~/fetchers'
 import { styles } from '~/styles/home'
+import { footerState } from '~/state'
 
 import {
   type Article,
   type CMSArticleResponse,
   type CMSTopic,
-  Series, DropdownItem
+  type Series,
+  type DropdownItem
 } from '~/types'
 
 import Spinner from 'react-spinner-material'
@@ -33,6 +36,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const res = await fetchData<CMSArticleResponse>('articles', q)
 
   return {
+    total: res.meta?.pagination?.total,
     articles: res.data.map(
       normalizeArticle
     )
@@ -47,7 +51,7 @@ type FetcherResponse = {
 }
 
 export default function Index() {
-  const initialData = useLoaderData<{ articles: Article[]}>()
+  const initialData = useLoaderData<{ articles: Article[], total: number }>()
   const { data, load, state } = useFetcher<FetcherResponse>()
 
   const [ category, setCategory ] = useState<SearchCategory>('articles')
@@ -57,10 +61,25 @@ export default function Index() {
   const [ topics, setTopics ] = useState<string[]>([])
   const [ topic, setTopic ] = useState<DropdownItem>()
   const [ start, setStart ] = useState<number>(LIMIT)
+  const [_, setFooterState] = useRecoilState(footerState)
 
-  const { bottom } = useScrollBottom()  
+  const { bottom } = useScrollBottom()
+
+  const canScroll = (articles.length !== initialData.total)
 
   useEffect(() => load('/api/topics'), [])
+
+  useEffect(() => {
+    if(category !== 'articles'){
+      return setFooterState({
+        active: true, bottom
+      })
+    }
+    setFooterState({
+      active: !canScroll,
+      bottom: (!canScroll && bottom) ? true : false
+    })
+  }, [articles, bottom, canScroll])
 
   useEffect(() => {
     if(topic){
@@ -75,7 +94,7 @@ export default function Index() {
   }, [category])
 
   useEffect(() => {    
-    if(category === 'articles' && bottom){
+    if(canScroll && category === 'articles' && bottom){
       const qs = new URLSearchParams([
         ['pagination[start]', String(start)],
         ['pagination[limit]', String(LIMIT)]
@@ -236,8 +255,6 @@ export default function Index() {
           className='mx-auto mt-6'
         />
       </Show>
-
-      <ScrollTop />
     </div>
   )
 }
