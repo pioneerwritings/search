@@ -1,10 +1,26 @@
+import { ScrollTop } from "../scrollTop"
+import { useRecoilState } from 'recoil'
+import { footerState } from "~/state"
+import { Show } from '~/components'
+import { styles } from '~/styles/components/footer'
+
+import classnames from 'classnames'
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear()
+  const [ { active, bottom } ] = useRecoilState(footerState)
+
+  const height = active ? 'h-48' : 'h-20'
 
   return (
-    <footer className='w-full h-32 flex items-center justify-start md:justify-center bg-gray-50 mt-12 pl-10 md:p-0'>
-      <p><strong>© {currentYear}</strong> Pioneer Writings.</p>
+    <footer className={classnames(styles.container, height)}>
+      <ScrollTop fixed={!bottom} />
+
+      <Show when={active}>
+        <div className={styles.copyright}>
+          <p><strong>© {currentYear}</strong> Pioneer Writings.</p>
+        </div>
+      </Show>
     </footer>
   )
 }
