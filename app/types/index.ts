@@ -16,6 +16,11 @@ interface CMSAttributeMeta {
   createdAt: string
   updatedAt: string
   publishedAt: string
+  pagination?: {
+    start?: number
+    limit?: number
+    total?: number
+  }
 }
 
 interface CMSRelation {
