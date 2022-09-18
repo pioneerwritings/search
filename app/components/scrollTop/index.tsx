@@ -1,14 +1,19 @@
 import { styles } from '~/styles/components/scrollTop'
 import { useEffect, useState } from 'react'
+
 import classNames from 'classnames'
 
-export const ScrollTop = () => {
+interface Props {
+  fixed?: boolean
+}
+
+export const ScrollTop = ({ fixed }: Props) => {
   const [ visible, setVisible ] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPos = window.scrollY
-      setVisible(scrollPos >= 200)
+      setVisible(scrollPos >= 250)
     }
 
     window.addEventListener(
@@ -31,8 +36,10 @@ export const ScrollTop = () => {
   }
 
   const classes = classNames(styles, {
-    'w-12 h-12': visible,
-    'w-0 h-0': !visible
+    fixed,
+    'bottom-8': fixed,
+    'scale-100': visible,
+    'scale-0': !visible
   })
 
   return (
@@ -40,7 +47,7 @@ export const ScrollTop = () => {
       className={classes}
       aria-label='Scroll back to the top'
       onClick={handleClick}>
-      <img src='/images/top-arrow.svg' alt='' />
+      <img src='/images/top-arrow.svg' alt='' aria-hidden />
     </button>
   )
 }
