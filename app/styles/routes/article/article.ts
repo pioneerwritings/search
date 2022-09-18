@@ -121,7 +121,7 @@ export const styles = {
     h-10 
     cursor-pointer 
     hover:shadow-lg 
-    hover:shadow-ash 
+    hover:shadow-indigo 
     transition-all 
     hover:scale-110 
     active:scale-100 
