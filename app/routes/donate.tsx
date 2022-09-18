@@ -260,8 +260,6 @@ export default function DonatePage(){
           />
         </Link>
       </Show>
-
-      <ScrollTop />
     </div>
   )
 }

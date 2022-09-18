@@ -3,8 +3,11 @@ import { fetchData } from '~/fetchers'
 import { CMSSingleSeriesResponse, Series } from '~/types'
 import { useLoaderData } from '@remix-run/react'
 import { normalizeSeries } from '~/utils'
-import { Card, ScrollTop } from '~/components'
+import { Card } from '~/components'
 import { styles } from '~/styles/routes/series'
+import { useEffect } from 'react'
+import { footerState } from '~/state'
+import { useRecoilState } from 'recoil'
 
 export const loader: LoaderFunction = async ({ params }) => {
   const series = (await fetchData<CMSSingleSeriesResponse>(`series/${params.id}`))
@@ -13,6 +16,14 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function SeriesPage(){
   const { name, description, articles, author, topic } = useLoaderData<Series>()
+  const [_, setFooterState ] = useRecoilState(footerState)
+
+  useEffect(() => {
+    setFooterState({
+      active: true,
+      bottom: true
+    })
+  }, [])
 
   return (
     <div className={styles.page}>
@@ -53,8 +64,6 @@ export default function SeriesPage(){
           }
         </div>
       </div>
-
-      <ScrollTop />
     </div>
   )
 }
