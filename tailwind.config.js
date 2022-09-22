@@ -20,6 +20,7 @@ module.exports = {
     },
   },
   plugins: [
-    require("@thoughtbot/tailwindcss-aria-attributes")
+    require("@thoughtbot/tailwindcss-aria-attributes"),
+    require('tailwind-scrollbar')
   ],
 }

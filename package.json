@@ -31,7 +31,8 @@
     "react-spinner-material": "^1.4.0",
     "recoil": "^0.7.5",
     "sass": "^1.54.0",
-    "stripe": "^8.200.0"
+    "stripe": "^8.200.0",
+    "tailwind-scrollbar": "^2.0.1"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.6.7",
