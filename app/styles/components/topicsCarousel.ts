@@ -6,14 +6,8 @@ export const styles = {
     lg:max-w-3xl 
     xl:max-w-6xl
   `,
-  title: `
-    text-center 
-    block 
-    text-lg 
-    md:text-2xl
-  `,
   topic: `
-    bg-gray-100
+    bg-gray-50
     h-10
     flex
     justify-center
@@ -27,19 +21,13 @@ export const styles = {
     font-bold 
     shrink-0
     mr-4
-    hover:bg-gray-200
+    hover:bg-gray-100
+    focus:bg-gray-100
+    focus:outline-black
     border
-    hover:border-gray-300
+    hover:border-black
     transition-all
-  `,
-  container: `
-    flex 
-    items-center 
-    h-16 
-    mb-6 
-    mt-2 
-    md:mb-12 
-    md:mt-4
+    list-none
   `,
   topics: `
     flex 
@@ -47,6 +35,10 @@ export const styles = {
     overflow-x-auto 
     h-16 
     scrollbar-thin
+    padding-0
+    items-center
+    mb-6  
+    md:mb-12 
   `,
   inactiveState: `
     text-black
@@ -54,5 +46,6 @@ export const styles = {
   activeState: `
     !bg-black
     text-white
+    border-black
   `
 }
