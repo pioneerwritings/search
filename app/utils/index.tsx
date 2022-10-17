@@ -44,7 +44,12 @@ export const normalizeArticle = (article: CMSArticle): Article => {
     body,
     author,
     topic,
-    periodical
+    periodical,
+    ...(attributes?.series?.data ? { 
+      series: {
+        id: Number(attributes.series.data.id),
+        name: attributes.series.data.attributes.name.trim()
+    } } : {})
   }
 }
 

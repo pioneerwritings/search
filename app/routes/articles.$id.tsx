@@ -2,9 +2,9 @@ import { LoaderFunction, json } from '@remix-run/node'
 import { useLoaderData, useNavigate, useLocation } from '@remix-run/react'
 import { useEffect, useRef } from 'react'
 import { Show } from '~/components'
-import { isSeries, normalizeArticle, normalizeSeries } from '~/utils'
+import { normalizeArticle, normalizeSeries } from '~/utils'
 import { styles } from '~/styles/routes/article/article'
-import { CMSSingleArticleResponse, Article, CMSSeriesResponse } from '~/types'
+import { CMSSingleArticleResponse, Article, CMSSingleSeriesResponse } from '~/types'
 import { useScrollBottom } from '~/hooks'
 import { fetchData } from '~/fetchers'
 import { useRecoilState } from 'recoil'
@@ -27,40 +27,38 @@ interface LocationState {
   query?: string
 }
 
-export const loader: LoaderFunction = async ({ params }) => { 
-  const res = await fetchData<CMSSingleArticleResponse>(
+export const loader: LoaderFunction = async ({ params }) => {
+  const response = await fetchData<CMSSingleArticleResponse>(
     `articles/${params.id}`
   )
 
-  const article = normalizeArticle(res.data)
+  const article = normalizeArticle(response.data)
   const title = article?.title
-  const part = isSeries(title) as string
+  const series = article?.series
   
-  if(!isSeries(title)){
-    return json({ article })
-  }
-
-  const name   = title.split('—').filter(str => !Number(str)).join('—').trim()
-  const res2   = (await fetchData<CMSSeriesResponse>('series', `filters[name][$eq]=${name.trim()}`)).data
-  const series = normalizeSeries(res2[0])
-
   if(!series){
     return json({ article })
   }
-  const num = series.articles.findIndex((a) => a.title === title) + 1
-  const len = series.articles.length
+
+  const { id, name } = series 
+  const res = (await fetchData<CMSSingleSeriesResponse>(`series/${id}`)).data
+
+  const { articles } = normalizeSeries(res)
+
+  const num = articles.findIndex((a) => a.title === title) + 1
+  const len = articles.length
 
   const prevArticle = (): string | null => {
     if(num > 1){
       const index = num - 2
-      return series.articles[index].id
+      return articles[index].id
     }
     return null
   }
 
   const nextArticle = (): string | null => {
     if(num < len){
-      return series.articles[num].id
+      return articles[num].id
     }
     return null
   }
@@ -68,7 +66,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   return json<LoaderResponse>({
     article, series: {
       name,
-      part,
+      part: String(num),
       prev: prevArticle(),
       next: nextArticle()
     }
