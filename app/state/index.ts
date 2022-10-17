@@ -11,6 +11,10 @@ interface FooterState {
   bottom: boolean
 }
 
+interface NavState {
+  active: boolean
+}
+
 export const searchState = atom<SearchState>({
   key: 'search',
   default: {
@@ -26,4 +30,9 @@ export const footerState = atom<FooterState>({
     active: true,
     bottom: true
   }
+})
+
+export const navState = atom<NavState>({
+  key: 'navState',
+  default: { active: false }
 })
