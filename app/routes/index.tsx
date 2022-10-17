@@ -132,12 +132,10 @@ export default function Index() {
 
       <div className={styles.gridContainer}
         role='feed'
-        aria-label='Latest articles'>
+        aria-label='Latest articles'
+        aria-busy={state === 'loading'}>
 
-        <div className={styles.grid}
-          aria-busy={state === 'loading'}
-          aria-label='Article feed'
-          role='grid'>
+        <div className={styles.grid}>
 
           {
             articleList?.map((article) => {
