@@ -1,5 +1,5 @@
-import { Show } from '../show'
 import { styles } from '~/styles/components/topicsCarousel'
+import { KeyboardEvent } from 'react'
 
 import classNames from 'classnames'
 
@@ -12,38 +12,48 @@ interface Props {
 
 
 export const TopicsCarousel = ({ data, title, activeItem, onClick }: Props) => {
+
+  const handleKeyPress = (event: KeyboardEvent) => {
+    const { key, currentTarget: { textContent } } = event
+
+    if(key === ' '){
+      event.preventDefault()
+      onClick(textContent!)
+    }
+    if(key === 'Enter'){
+      onClick(textContent!)
+    }
+  }
+
   return (
     <div className={styles.carousel}>
-      <Show when={!!title}>
-        <span className={styles.title}>{title}</span>
-      </Show>
+      <ul className={styles.topics} role='list'>
+        {
+          ['All', ...data].map((item, i) => {
+            const isActive = (item === activeItem) || (i === 0 && activeItem === '')
 
-      <div className={styles.container}>
-        <div className={styles.topics}>
-          {
-            ['All', ...data].map((item, i) => {
-              const isActive = (item === activeItem) || (i === 0 && activeItem === '')
-
-              const classnames = classNames(styles.topic, {
-                [styles.activeState]: isActive,
-                [styles.inactiveState]: !isActive
-              })
-              const handleClick = () => {
-                onClick(i === 0 ? undefined : item)
-              }
-
-              return (
-                <div
-                  onClick={handleClick}
-                  key={item}
-                  className={classnames}>
-                  {item}
-                </div>
-              )
+            const classnames = classNames(styles.topic, {
+              [styles.activeState]: isActive,
+              [styles.inactiveState]: !isActive
             })
-          }
-        </div>
-      </div>
+            const handleClick = () => {
+              onClick(i === 0 ? undefined : item)
+            }
+
+            return (
+              <li
+                role='listitem'
+                onClick={handleClick}
+                onKeyDown={handleKeyPress}
+                key={item}
+                className={classnames}
+                tabIndex={0}>
+                {item}
+              </li>
+            )
+          })
+        }
+      </ul>
     </div>
   )
 }
