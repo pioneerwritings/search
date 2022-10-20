@@ -38,9 +38,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return {
     total: res.meta?.pagination?.total,
     topics: res2.data.map(topic => topic.attributes.name),
-    articles: res.data.map(
-      normalizeArticle
-    )
+    articles: res.data.map(normalizeArticle)
   }
 }
 
