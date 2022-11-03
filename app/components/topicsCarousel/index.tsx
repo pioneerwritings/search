@@ -1,5 +1,5 @@
 import { styles } from '~/styles/components/topicsCarousel'
-import { KeyboardEvent } from 'react'
+import { KeyboardEvent, useRef } from 'react'
 
 import classNames from 'classnames'
 
@@ -10,8 +10,8 @@ interface Props {
   onClick(item: string | undefined): void
 }
 
-
 export const TopicsCarousel = ({ data, title, activeItem, onClick }: Props) => {
+  const ref = useRef<HTMLUListElement>(null)
 
   const handleKeyPress = (event: KeyboardEvent) => {
     const { key, currentTarget: { textContent } } = event
@@ -20,14 +20,30 @@ export const TopicsCarousel = ({ data, title, activeItem, onClick }: Props) => {
       event.preventDefault()
       onClick(textContent!)
     }
-    if(key === 'Enter'){
+    if(key === 'Enter'){  
       onClick(textContent!)
+    }
+  }
+
+  const handlePagerClick = (direction: 'right' | 'left') => {
+    if(ref.current){
+      if(ref.current.scrollWidth - ref.current.offsetWidth - ref.current.scrollLeft > 0){
+        ref.current.scrollLeft = (
+          direction === 'left' ? 
+          ref.current.scrollLeft -= 150 : 
+          ref.current.scrollLeft += 150
+        )
+      }
     }
   }
 
   return (
     <div className={styles.carousel}>
-      <ul className={styles.topics} role='list'>
+      <button onClick={() => handlePagerClick('left')} type='button' className='mr-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12'>
+        <img src='/images/left-arrow.svg' />
+      </button>
+
+      <ul className={styles.topics} role='list' ref={ref}>
         {
           ['All', ...data].map((item, i) => {
             const isActive = (item === activeItem) || (i === 0 && activeItem === '')
@@ -54,6 +70,10 @@ export const TopicsCarousel = ({ data, title, activeItem, onClick }: Props) => {
           })
         }
       </ul>
+
+      <button onClick={() => handlePagerClick('right')} type='button' className='ml-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12'>
+        <img src='/images/right-arrow.svg' />
+      </button>
     </div>
   )
 }
