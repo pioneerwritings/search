@@ -1,10 +1,14 @@
 
 export const styles = {
   carousel: `
+    flex 
+    items-center
     mx-auto 
     md:max-w-3xl 
     lg:max-w-3xl 
     xl:max-w-6xl
+    mb-6
+    md:mb-8
   `,
   topic: `
     bg-gray-50
@@ -30,15 +34,13 @@ export const styles = {
     list-none
   `,
   topics: `
-    flex 
-    items-center 
+    flex
+    items-center
     overflow-x-auto 
     h-16 
     scrollbar-thin
     padding-0
-    items-center
-    mb-6  
-    md:mb-12 
+    scroll-smooth
   `,
   inactiveState: `
     text-black
