@@ -38,7 +38,7 @@ export const TopicsCarousel = ({ data, activeItem, onClick }: TopicsCarouselProp
 
   return (
     <div className={styles.carousel}>
-      <button aria-label='Click to scroll left' onClick={() => handlePagerClick('left')} type='button' className='mr-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12'>
+      <button aria-label='Click to scroll left' onClick={() => handlePagerClick('left')} type='button' className='mr-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-indigo focus-visible:ring-cornflower/50'>
         <img src='/images/left-arrow.svg' />
       </button>
 
@@ -71,7 +71,7 @@ export const TopicsCarousel = ({ data, activeItem, onClick }: TopicsCarouselProp
         }
       </ul>
 
-      <button aria-label='Click to scroll right' onClick={() => handlePagerClick('right')} type='button' className='ml-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12'>
+      <button aria-label='Click to scroll right' onClick={() => handlePagerClick('right')} type='button' className='ml-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-indigo focus-visible:ring-cornflower/50'>
         <img src='/images/right-arrow.svg' />
       </button>
     </div>
