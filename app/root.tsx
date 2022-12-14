@@ -17,7 +17,7 @@ import {
 } from '@remix-run/react'
 
 import { RecoilRoot } from 'recoil'
-import { Header, Footer, Search } from './components'
+import { Header, Footer, Search, MobileNav } from './components'
 import { rootStyles } from './styles/root'
 import { links as algoliaSearchLinks } from '~/components/search'
 
@@ -69,6 +69,7 @@ export default function App() {
           <div className={rootStyles}>
             <Search />
             <Header />
+            <MobileNav />
             <Outlet />
             <Footer />
           </div>

@@ -42,7 +42,11 @@ export function Card<T extends CardProps>(props: T) {
 
         <h2 className={styles.h2}>{heading}</h2>
 
-        <p className={styles.p} id={id}>
+        <p id={id} className='sr-only'>
+          {excerpt}—Click to read this article
+        </p>
+
+        <p className={styles.p}>
           {truncateText(excerpt, 70)}
         </p>
 
