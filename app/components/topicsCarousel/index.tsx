@@ -3,14 +3,13 @@ import { KeyboardEvent, useRef } from 'react'
 
 import classNames from 'classnames'
 
-interface Props {
-  title?: string
+export interface TopicsCarouselProps {
   data: string[]
   activeItem: string
   onClick(item: string | undefined): void
 }
 
-export const TopicsCarousel = ({ data, title, activeItem, onClick }: Props) => {
+export const TopicsCarousel = ({ data, activeItem, onClick }: TopicsCarouselProps) => {
   const ref = useRef<HTMLUListElement>(null)
 
   const handleKeyPress = (event: KeyboardEvent) => {
@@ -39,7 +38,7 @@ export const TopicsCarousel = ({ data, title, activeItem, onClick }: Props) => {
 
   return (
     <div className={styles.carousel}>
-      <button onClick={() => handlePagerClick('left')} type='button' className='mr-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12'>
+      <button aria-label='Click to scroll left' onClick={() => handlePagerClick('left')} type='button' className='mr-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12'>
         <img src='/images/left-arrow.svg' />
       </button>
 
@@ -59,6 +58,7 @@ export const TopicsCarousel = ({ data, title, activeItem, onClick }: Props) => {
             return (
               <li
                 role='listitem'
+                aria-label={item}
                 onClick={handleClick}
                 onKeyDown={handleKeyPress}
                 key={item}
@@ -71,7 +71,7 @@ export const TopicsCarousel = ({ data, title, activeItem, onClick }: Props) => {
         }
       </ul>
 
-      <button onClick={() => handlePagerClick('right')} type='button' className='ml-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12'>
+      <button aria-label='Click to scroll right' onClick={() => handlePagerClick('right')} type='button' className='ml-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12'>
         <img src='/images/right-arrow.svg' />
       </button>
     </div>
