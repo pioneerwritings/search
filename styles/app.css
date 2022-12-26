@@ -25,4 +25,8 @@
     -webkit-appearance: none;
     appearance: none;
   }
+
+  input:focus {
+    outline:none;
+  }
 }
