@@ -72,10 +72,9 @@ export const Search = () => {
                 formRef={formRef}
                 classNames={{
                   root: 'w-full',
-                  input: 'w-full h-14 focus:outline-0 appearance-none flex pl-4 pr-2 md:px-4 bg-white rounded-none focus:outline-0',
+                  input: 'w-full h-14 appearance-none flex pl-4 pr-2 md:px-4 bg-white rounded-none focus:outline-none focus:border-none',
                   form: 'flex items-center flex-row-reverse w-full relative',
-                  reset: 'invisible sm:visible absolute right-6 hover:bg-gray-100',
-                  submit: ''
+                  reset: 'invisible sm:visible absolute right-6 hover:bg-gray-100'
                 }}
               />
 

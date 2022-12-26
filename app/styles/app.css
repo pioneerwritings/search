@@ -1788,6 +1788,10 @@ input[type="search"]::-webkit-search-decoration,
   border-bottom-width: 0px;
 }
 
+.focus\:border-none:focus {
+  border-style: none;
+}
+
 .focus\:bg-cornflower\/20:focus {
   background-color: rgb(114 117 240 / 0.2);
 }
@@ -1799,6 +1803,11 @@ input[type="search"]::-webkit-search-decoration,
 .focus\:bg-gray-100:focus {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 .focus\:outline-dashed:focus {
