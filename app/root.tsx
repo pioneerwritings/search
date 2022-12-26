@@ -50,7 +50,7 @@ export const loader = async () => {
 }
 
 export default function App() {
-  const data = useLoaderData<typeof loader>()
+  const { env } = useLoaderData<typeof loader>()
 
   return (
     <html lang='en-US'>
@@ -72,7 +72,7 @@ export default function App() {
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{__html: 
-            `window.env = ${JSON.stringify(data.env)}`
+            `window.env = ${JSON.stringify(env)}`
           }}>
         </script>
         <Scripts />
