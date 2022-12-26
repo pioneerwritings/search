@@ -87,7 +87,7 @@ export const Search = () => {
               </button>
             </div>
 
-            <output className='overflow-auto max-h-96 rounded-xl'>
+            <output className='overflow-auto max-h-96 rounded-b-xl'>
               <Results />
             </output>
           </InstantSearch>

@@ -19,7 +19,7 @@ export const Hit = ({ hit, query }: Props) => {
   return (
     <Show when={query !== ''}>
       <Link to={`/articles/${hit.objectID}`} onClick={handleClick} state={{ query }}>
-        <div className='h-24 flex py-2 cursor-pointer  w-full relative items-center border-b border-b-gray-200 hover:bg-gray-50 px-6 justify-between'>
+        <div className='w-full h-24 flex py-2 cursor-pointer relative items-center hover:bg-gray-50 px-6 justify-between border-b border-b-gray-200'>
           <div className='flex flex-col justify-center'>
             <header className='flex items-center'>
               <small className='uppercase text-[10px] first: m-0 font-bold mr-2 text-black'>

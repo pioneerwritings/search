@@ -72,7 +72,7 @@ export const Results = () => {
                     tabIndex={0}
                     onClick={() => handleRecentClick(query)}
                     key={`query-${i}`}
-                    className='w-full h-20 flex items-center justify-between px-6 cursor-pointer border-b border-b-gray-200 hover:bg-gray-50 rounded-b-xl rounded-t-none'>
+                    className='w-full h-20 flex items-center justify-between px-6 cursor-pointer border-b border-b-gray-200 hover:bg-gray-50 last:rounded-b-xl last:border-b-0'>
                       <div className='flex items-center'>
                         <img src='/images/recent.svg' aria-hidden className='mr-4' />
                         {query}
