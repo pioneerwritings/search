@@ -2061,6 +2061,10 @@ input[type="search"]::-webkit-search-decoration,
 }
 
 @media (min-width: 1024px) {
+  .lg\:flex {
+    display: flex;
+  }
+
   .lg\:max-w-3xl {
     max-width: 48rem;
   }
