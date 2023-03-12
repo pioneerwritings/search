@@ -1,7 +1,6 @@
 import {
   type ErrorBoundaryComponent,
   type LinksFunction, 
-  type LoaderFunction,
   json, 
   MetaFunction 
 } from '@remix-run/node'
@@ -23,10 +22,6 @@ import { links as algoliaSearchLinks } from '~/components/search'
 
 import styles from './styles/app.css'
 
-interface LoaderResponse {
-  env: Record<string, string | undefined>
-}
-
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
   title: 'Pioneer Writings',
@@ -41,8 +36,8 @@ export const links: LinksFunction = () => [
   ...algoliaSearchLinks()
 ]
 
-export const loader: LoaderFunction = async () => {
-  return json<LoaderResponse>({
+export const loader = async () => {
+  return json({
     env: {
       STRAPI_API_URL: process.env.STRAPI_API_URL,
       PREVIEW_SECRET: process.env.PREVIEW_SECRET,
@@ -55,7 +50,7 @@ export const loader: LoaderFunction = async () => {
 }
 
 export default function App() {
-  const data = useLoaderData<LoaderResponse>()
+  const { env } = useLoaderData<typeof loader>()
 
   return (
     <html lang='en-US'>
@@ -77,7 +72,7 @@ export default function App() {
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{__html: 
-            `window.env = ${JSON.stringify(data.env)}`
+            `window.env = ${JSON.stringify(env)}`
           }}>
         </script>
         <Scripts />

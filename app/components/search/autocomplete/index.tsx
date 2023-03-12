@@ -7,7 +7,7 @@ import { createRoot, Root } from 'react-dom/client'
 import { useNavigate } from '@remix-run/react'
 import { useAlgoliaClient } from '~/hooks'
 import { Results } from './results'
-import { Hit } from './hit'
+import { Hit } from '../hit'
 
 interface AutoCompleteProps extends Partial<AutocompleteOptions<BaseItem>> {
   className?: string
