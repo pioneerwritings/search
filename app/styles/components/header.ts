@@ -34,11 +34,11 @@ export const styles = {
     mr-10
   `,
   activeRoute: `
-    !text-black
+    !text-cornflower
     transition-all
     after:w-4
     after:rounded-xl
-    after:bg-black
+    after:bg-cornflower
     after:h-[0.2rem]
     after:absolute
     after:bottom-6

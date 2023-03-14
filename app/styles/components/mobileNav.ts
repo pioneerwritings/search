@@ -1,56 +1,42 @@
 
 export const styles = {
   nav: `
-    transition-all
     z-30 
-    w-80 
-    h-full 
-    bg-midnight 
-    fixed 
+    w-full 
+    bg-white
     flex 
-    flex-col 
-    p-6 
+    flex-col  
     top-0 
     md:hidden 
-    after:fixed 
-    after:-z-10 
-    after:top-0 
-    after:left-0 
-    after:w-full 
-    after:h-full
-    after:-left-[500px]
+    relative
+    pb-4
   `,
   close: `
     w-14
     h-14 
-    rounded-lg 
-    bg-white/10 
+    rounded-3xl
     flex 
     items-center 
     justify-center 
     mb-4
+    absolute
+    right-2
   `,
   link: `
-    text-white 
+    w-full
+    h-20
     text-2xl 
-    py-6
-    ml-4
+    px-6
     border-b 
-    border-b-white/20 
+    border-b-gray-200 
     last:border-0
     relative
     flex
     items-center
   `,
   activeLink: `
-    before:absolute
-    before:-left-[16px]
-    before:rounded-sm
-    before:block
-    before:w-[4px]
-    before:h-[12px]
-    before:bg-cornflower
-    before:z-10
     text-cornflower
+    font-bold
+    bg-cornflower/10
   `
 }
