@@ -123,7 +123,6 @@ export default function Index() {
     <div className={styles.page}>
       <TopicsCarousel
         data={topics}
-        title='Topics'
         onClick={handleTopicChange}
         activeItem={topic ?? ''}
       />
