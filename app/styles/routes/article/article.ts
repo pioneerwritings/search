@@ -42,6 +42,7 @@ export const styles = {
     mt-6
   `,
   periodical: `
+    periodical 
     text-center
     font-light
     mt-1
