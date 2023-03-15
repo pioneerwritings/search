@@ -1,5 +1,5 @@
 
-describe('Algolia search', () => {
+describe('Algolia Search', () => {
   beforeEach(() =>  cy.visit('/'))
 
   it('Should open search modal', () => {

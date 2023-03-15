@@ -1,5 +1,5 @@
 
-describe('Article page', () => {
+describe('Article Page', () => {
   beforeEach(() => cy.visit('/articles/573'))
 
   it('Should render the heading', () => {

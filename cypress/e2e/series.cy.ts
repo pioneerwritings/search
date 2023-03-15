@@ -1,5 +1,5 @@
 
-describe('Series page', () => {
+describe('Series Page', () => {
   beforeEach(() => cy.visit('/series'))
   
   it('Should render', () => {
