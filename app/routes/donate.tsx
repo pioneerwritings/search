@@ -184,7 +184,7 @@ export default function DonatePage(){
               onClick={() => setEditing(true)}
               className={classNames(
                 amountPickerStyles.button,
-                'rounded-r-xl',
+                'other rounded-r-xl',
                 optionOtherSelected ? amountPickerStyles.selected : ''
               )}>
               Other
