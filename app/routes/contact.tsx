@@ -24,7 +24,6 @@ interface ActionResponse {
 export const action = async ({ request }: ActionArgs) => {
   const form = await request.formData()
   const errors: ActionResponse['errors'] = {}
-  const nodemailer = require('nodemailer')
 
   const firstname = form.get('first name')
   const lastname = form.get('last name')
@@ -47,41 +46,50 @@ export const action = async ({ request }: ActionArgs) => {
     })
   }
 
-  const transport = nodemailer.createTransport({
-    secure: true,
-    port: 465,
-    host: 'smtp.gmail.com',
-
-    auth: {
-      user: process.env.GMAIL_USERNAME,
-      pass: process.env.GMAIL_PASSWORD
-    }
-  })
-
   try {
-    await transport.sendMail({
-      from: email as string,
-      to: 'pioneerwritings@gmail.com',
-      subject: `New message from pioneerwritings.com`,
-      html: `
-        <html>
-          <head>
-            <meta charset="utf-8">
-          </head>
+    const testing = [
+      'This is a test from cypress', 
+      'This is a test from localhost'
+    ].includes(message as string)
 
-          <body>
-            <p>
-              <strong>Name</strong>: ${firstname} ${lastname} <br />
-              <strong>Email</strong>: ${email}
-            </p>
+    if(!testing){
+      const nodemailer = require('nodemailer')
 
-            <hr style='margin: 2rem 0; border:none; background-color: #E3E3E3; height: 1px; max-width:500px;' />
+      const transport = nodemailer.createTransport({
+        secure: true,
+        port: 465,
+        host: 'smtp.gmail.com',
+    
+        auth: {
+          user: process.env.GMAIL_USERNAME,
+          pass: process.env.GMAIL_PASSWORD
+        }
+      })
 
-            <p style='max-width:500px;'>${message}</p>
-          </body>
-        </html>
-      `
-    })
+      await transport.sendMail({
+        from: email as string,
+        to: 'pioneerwritings@gmail.com',
+        subject: `New message from pioneerwritings.com`,
+        html: `
+          <html>
+            <head>
+              <meta charset="utf-8">
+            </head>
+  
+            <body>
+              <p>
+                <strong>Name</strong>: ${firstname} ${lastname} <br />
+                <strong>Email</strong>: ${email}
+              </p>
+  
+              <hr style='margin: 2rem 0; border:none; background-color: #E3E3E3; height: 1px; max-width:500px;' />
+  
+              <p style='max-width:500px;'>${message}</p>
+            </body>
+          </html>
+        `
+      })
+    }
 
     return json<ActionResponse>({
       success: true
@@ -156,7 +164,7 @@ export default function ContactPage(){
         </Show>
 
         <Show when={!!error}>
-          <span className='text-red-500 text-xs pl-4 mt-1'>
+          <span className='required text-red-500 text-xs pl-4 mt-1'>
             {error}
           </span>
         </Show>
@@ -219,7 +227,7 @@ export default function ContactPage(){
 
         <button 
           type='submit' 
-          className='w-full px-4 py-6 text-center bg-black rounded-lg text-white font-extrabold mt-8 focus:ring focus:ring-3 ring-cornflower outline-0'
+          className='submit w-full px-4 py-6 text-center bg-black rounded-lg text-white font-extrabold mt-8 focus:ring focus:ring-3 ring-cornflower outline-0'
           disabled={isSubmitting}>
           {isSubmitting ? 'LOADING' : 'SUBMIT'}
         </button>
