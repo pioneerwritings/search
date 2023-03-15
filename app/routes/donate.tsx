@@ -1,7 +1,7 @@
 import { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { useLoaderData, useFetcher, Link, useLocation } from '@remix-run/react'
 import { ChangeEvent, useState, useRef, useEffect } from 'react'
-import { Show, ScrollTop } from '~/components'
+import { Show } from '~/components'
 import { styles } from '~/styles/routes/donate'
 import { amountPickerStyles } from '~/styles/components/amountPicker'
 import { stripe, stripekey } from '~/stripe.server'
@@ -184,7 +184,7 @@ export default function DonatePage(){
               onClick={() => setEditing(true)}
               className={classNames(
                 amountPickerStyles.button,
-                'rounded-r-xl',
+                'other rounded-r-xl',
                 optionOtherSelected ? amountPickerStyles.selected : ''
               )}>
               Other

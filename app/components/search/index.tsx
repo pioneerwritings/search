@@ -48,8 +48,8 @@ export const Search = () => {
 
   if(client){
     return (
-      <div className='fixed w-screen h-screen z-50 left-0 backdrop-blur-md bg-ash/30 cursor-pointer' style={{ display: state.active ? 'block' : 'none'}} onClick={handleClose}>
-        <div className='bg-white rounded-xl mx-4 max-w-xl md:max-w-2xl sm:mx-auto my-8 flex flex-col' onClick={(e) => e.stopPropagation()}>
+      <div className='search-backdrop fixed w-screen h-screen z-50 left-0 backdrop-blur-md bg-ash/30 cursor-pointer' style={{ display: state.active ? 'block' : 'none'}} onClick={handleClose}>
+        <div className='search-modal bg-white rounded-xl mx-4 max-w-xl md:max-w-2xl sm:mx-auto my-8 flex flex-col' onClick={(e) => e.stopPropagation()}>
           <InstantSearch indexName='articles' searchClient={client}>
             <Configure
               snippetEllipsisText='...'
@@ -72,7 +72,7 @@ export const Search = () => {
                 formRef={formRef}
                 classNames={{
                   root: 'w-full',
-                  input: 'w-full h-14 appearance-none flex pl-4 pr-2 md:px-4 bg-white rounded-none focus:outline-none focus:border-none',
+                  input: 'search w-full h-14 appearance-none flex pl-4 pr-2 md:px-4 bg-white rounded-none focus:outline-none focus:border-none',
                   form: 'flex items-center flex-row-reverse w-full relative',
                   reset: 'invisible sm:visible absolute right-6 hover:bg-gray-100'
                 }}
