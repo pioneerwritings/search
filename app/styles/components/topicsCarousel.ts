@@ -1,6 +1,7 @@
 
 export const styles = {
   carousel: `
+    topics-carousel 
     flex 
     items-center
     mx-auto 
