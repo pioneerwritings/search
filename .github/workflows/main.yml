@@ -12,10 +12,10 @@ jobs:
           echo "$GITHUB_CONTEXT"
 
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: Cypress Run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         env:
           CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
           
