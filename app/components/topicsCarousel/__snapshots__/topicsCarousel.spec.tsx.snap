@@ -4,6 +4,7 @@ exports[`Topic Carousel Matches the snapshot 1`] = `
 <div>
   <div
     class="
+    topics-carousel 
     flex 
     items-center
     mx-auto 
@@ -16,7 +17,7 @@ exports[`Topic Carousel Matches the snapshot 1`] = `
   >
     <button
       aria-label="Click to scroll left"
-      class="mr-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12"
+      class="mr-4 shrink-0 rounded-full border items-center justify-center w-12 h-12 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-indigo focus-visible:ring-cornflower/50 hidden lg:flex"
       type="button"
     >
       <img
@@ -328,7 +329,7 @@ exports[`Topic Carousel Matches the snapshot 1`] = `
     </ul>
     <button
       aria-label="Click to scroll right"
-      class="ml-4 shrink-0 rounded-full border flex items-center justify-center w-12 h-12"
+      class="ml-4 shrink-0 rounded-full border items-center justify-center w-12 h-12 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-indigo focus-visible:ring-cornflower/50 hidden lg:flex"
       type="button"
     >
       <img
