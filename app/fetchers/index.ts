@@ -1,5 +1,3 @@
-import { CustomWindow } from '~/types'
-import { isServer } from '~/config'
 import { useEnv } from '~/hooks'
 
 export const fetchData = async <T>(type: string, query?: string) => {
