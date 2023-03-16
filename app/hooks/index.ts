@@ -1,3 +1,5 @@
 export * from './useScrollBottom'
 export * from './useAlgoliaClient'
 export * from './useRecentSearches'
+export * from './useGoogleAnalytics'
+export * from './useEnv'

@@ -3,11 +3,12 @@ import { useLoaderData, useFetcher } from '@remix-run/react'
 import { Card, TopicsCarousel, Show } from '~/components'
 import { useRecoilState } from 'recoil'
 import { isSeries, normalizeArticle } from '~/utils'
-import { useScrollBottom } from '~/hooks'
+import { useScrollBottom, useGoogleAnalytics } from '~/hooks'
 import { useState, useEffect } from 'react'
 import { fetchData } from '~/fetchers'
 import { styles } from '~/styles/home'
 import { footerState } from '~/state'
+import { isProduction } from '~/config'
 
 import {
   type Article,
@@ -67,6 +68,7 @@ export default function Index() {
   const { data, load, state } = useFetcher<FetcherResponse>()
   const { bottom } = useScrollBottom()
   const { topics } = initialData
+  const { GA4 } = useGoogleAnalytics()
 
   const canScroll = (articles.length !== initialData.total)
 
@@ -112,11 +114,9 @@ export default function Index() {
   const handleTopicChange = (topic: string) => {
     setTopic(topic)
     
-    // if(isProduction){
-    //   GA4?.gtag('event', 'topic_select', {
-    //     topic: topic.value
-    //   })
-    // }
+    if(isProduction){
+      GA4?.gtag('event', 'topic_select', { topic })
+    }
   }
 
   return (
