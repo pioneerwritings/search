@@ -16,7 +16,7 @@ import {
 } from '@remix-run/react'
 
 import { RecoilRoot } from 'recoil'
-import { Header, Footer, Search, MobileNav } from './components'
+import { Header, Footer, Search, MobileNav, GA4 } from './components'
 import { rootStyles } from './styles/root'
 import { links as algoliaSearchLinks } from '~/components/search'
 
@@ -63,6 +63,11 @@ export default function App() {
       
       <body>
         <RecoilRoot>
+          <GA4 
+            trackingID={env.GA_TRACKING_ID!} 
+            env={env.NODE_ENV}
+          />
+
           <div className={rootStyles}>
             <Search />
             <Header />
