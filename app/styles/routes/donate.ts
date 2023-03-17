@@ -33,6 +33,7 @@ export const styles = {
     outline-indigo
   `,
   continueButton: `
+    continue
     flex
     items-center
     mt-6

@@ -6,10 +6,12 @@ export const styles = `
   rounded-full
   bg-black
   transform-gpu
-  shadow-md
+  md:shadow-md
   shadow-gray-500
-  hover:shadow-lg hover:shadow-indigo
-  hover:scale-110 active:scale-100 shadow-md
+  md:hover:shadow-lg
+  md:hover:shadow-indigo
+  md:hover:scale-110
+  md:active:scale-100 shadow-md
   flex
   items-center
   justify-center

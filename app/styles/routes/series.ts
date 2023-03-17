@@ -17,10 +17,10 @@ export const styles = {
     antialiased
   `,
   author: `
-    my-4 block text-center
+    author my-4 block text-center
   `,
   description: `
-    text-center text-ash max-w-[600px] mx-auto
+    description text-center text-ash max-w-[600px] mx-auto
   `,
   series: `
     text-center block font-bold text-cornflower mb-2

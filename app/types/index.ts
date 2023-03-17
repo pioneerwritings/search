@@ -57,6 +57,7 @@ export interface CMSArticle extends BaseDocument {
     author: CMSRelation
     topic: CMSRelation
     periodical: CMSRelation
+    series?: CMSRelation
   }
 }
 
@@ -98,6 +99,10 @@ export interface Article extends BaseDocument, CMSArticleAttributes {
   author: string
   topic: string
   periodical: string
+  series?: {
+    id: number
+    name: string
+  }
 }
 
 export type ArticleCard = BaseDocument & Pick<Article, 'title' | 'author' | 'topic' | 'excerpt'>
