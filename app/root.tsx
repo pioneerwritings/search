@@ -19,14 +19,25 @@ import { RecoilRoot } from 'recoil'
 import { Header, Footer, Search, MobileNav, GA4 } from './components'
 import { rootStyles } from './styles/root'
 import { links as algoliaSearchLinks } from '~/components/search'
+import { ogImagePath } from './config'
 
 import styles from './styles/app.css'
 
-export const meta: MetaFunction = () => ({
-  charset: 'utf-8',
-  title: 'Pioneer Writings',
-  viewport: 'width=device-width,initial-scale=1, user-scalable=yes',
-})
+export const meta: MetaFunction = () => {
+  const title       = 'Pioneer Writings'
+  const description = 'Let the dead speak through their works.'
+
+  return {
+    charset: 'utf-8',
+    title,
+    description,
+    viewport: 'width=device-width,initial-scale=1, user-scalable=yes',
+    'og:title': title,
+    'og:description': description,
+    'og:image': ogImagePath,
+    'og:type': 'website'
+  }
+}
 
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },

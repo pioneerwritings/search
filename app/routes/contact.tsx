@@ -1,7 +1,8 @@
-import { ActionArgs, json } from "@remix-run/node"
+import { ActionArgs, json, MetaFunction } from "@remix-run/node"
 import { Form, useActionData, useTransition } from "@remix-run/react"
 import { InputHTMLAttributes } from "react"
 import { Show } from "~/components"
+import { ogImagePath } from "~/config"
 
 import Classnames from 'classnames'
 
@@ -101,6 +102,21 @@ export const action = async ({ request }: ActionArgs) => {
     return json<ActionResponse>({
       success: false
     })
+  }
+}
+
+export const meta: MetaFunction = () => {
+  const title       = 'Contact — Pioneer Writings'
+  const description = 'Please feel free to contact us regarding any inquiry.'
+
+  return {
+    charset: "utf-8",
+    title,
+    description,
+    'og:title': title,
+    'og:description': description,
+    'og:image': ogImagePath,
+    'og:type': 'website'
   }
 }
 
