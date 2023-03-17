@@ -1,16 +1,32 @@
-import { json, LoaderArgs } from "@remix-run/node"
+import { json, LoaderArgs, MetaFunction } from "@remix-run/node"
 import { fetchData } from '~/fetchers'
 import { normalizeSeries } from '~/utils'
 import { CMSSeriesResponse } from '~/types'
 import { useLoaderData } from "@remix-run/react"
 import { Card } from "~/components"
+import { ogSeriesImg } from "~/config"
 
 export const loader = async ({}: LoaderArgs) => {
   const { data } = await fetchData<CMSSeriesResponse>('series')
   
-  return json({ 
+  return json({
     seriesList: data.map(normalizeSeries)
   })
+}
+
+export const meta: MetaFunction = ({ data }) => {
+  const title       = 'Series — Pioneer Writings'
+  const description = 'Series allows for a more productive reading experience by grouping all articles that belong to a series together in one place.'
+
+  return {
+    charset: "utf-8",
+    title,
+    description,
+    'og:title': title,
+    'og:description': description,
+    'og:image': ogSeriesImg,
+    'og:type': 'website'
+  }
 }
 
 export default function SeriesPage(){

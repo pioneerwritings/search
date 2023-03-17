@@ -1,4 +1,4 @@
-import { LoaderFunction } from '@remix-run/node'
+import { LoaderFunction, MetaFunction } from '@remix-run/node'
 import { fetchData } from '~/fetchers'
 import { CMSSingleSeriesResponse, Series } from '~/types'
 import { useLoaderData } from '@remix-run/react'
@@ -8,10 +8,26 @@ import { styles } from '~/styles/routes/series'
 import { useEffect } from 'react'
 import { footerState } from '~/state'
 import { useRecoilState } from 'recoil'
+import { ogSeriesImg } from '~/config'
 
 export const loader: LoaderFunction = async ({ params }) => {
   const series = (await fetchData<CMSSingleSeriesResponse>(`series/${params.id}`))
   return normalizeSeries(series.data)
+}
+
+export const meta: MetaFunction = ({ data }) => {
+  const title = data.name.trim()
+  const excerpt = data.description.trim()
+
+  return {
+    charset: "utf-8",
+    title,
+    description: excerpt,
+    'og:title': title,
+    'og:description': excerpt,
+    'og:image': ogSeriesImg,
+    'og:type': 'website'
+  }
 }
 
 export default function SeriesPage(){

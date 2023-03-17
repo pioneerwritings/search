@@ -1,6 +1,6 @@
-import { LoaderFunction, json } from '@remix-run/node'
+import { json, MetaFunction, LoaderArgs } from '@remix-run/node'
 import { useLoaderData, useNavigate, useLocation } from '@remix-run/react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Show } from '~/components'
 import { normalizeArticle, normalizeSeries } from '~/utils'
 import { styles } from '~/styles/routes/article/article'
@@ -9,6 +9,7 @@ import { useScrollBottom } from '~/hooks'
 import { fetchData } from '~/fetchers'
 import { useRecoilState } from 'recoil'
 import { footerState as FooterState } from '~/state'
+import { ogImagePath } from '~/config'
 
 import markStyles from '~/styles/routes/article/mark.css'
 import Highlight from 'mark.js'
@@ -27,7 +28,7 @@ interface LocationState {
   query?: string
 }
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const response = await fetchData<CMSSingleArticleResponse>(
     `articles/${params.id}`
   )
@@ -64,7 +65,8 @@ export const loader: LoaderFunction = async ({ params }) => {
   }
 
   return json<LoaderResponse>({
-    article, series: {
+    article, 
+    series: {
       name,
       part: String(num),
       prev: prevArticle(),
@@ -77,7 +79,23 @@ export const links = () => [
   { rel: 'stylesheet', href: markStyles }
 ]
 
+export const meta: MetaFunction = ({ data }) => {
+  const title = data.article.title.trim()
+  const excerpt = data.article.excerpt.trim()
+
+  return {
+    charset: "utf-8",
+    title,
+    description: excerpt,
+    'og:title': title,
+    'og:description': excerpt,
+    'og:image': ogImagePath,
+    'og:type': 'article'
+  }
+}
+
 export default function ArticlePage(){
+  const [copied, setCopied] = useState(false)
   const { article, series } = useLoaderData<LoaderResponse>()
   const { state } = useLocation<LocationState>()
   const [ _, setFooterState] = useRecoilState(FooterState)
@@ -93,6 +111,10 @@ export default function ArticlePage(){
       bottom
     })
   }, [bottom])
+
+  useEffect(() => {
+    setTimeout(() => setCopied(false), 7000)
+  }, [copied])
 
   useEffect(() => {
     if(bodyRef.current && state?.query){
@@ -126,6 +148,18 @@ export default function ArticlePage(){
   const handleNextClick = () => {
     if(series?.next){
       navigate(`/articles/${series.next}`)
+    }
+  }
+
+  const copyTextToClipboard = async () => {
+    if (typeof window !== 'undefined') {
+      const url = window.location.href
+
+      if('clipboard' in navigator){
+        setCopied(true)
+        return await navigator.clipboard.writeText(url)
+      }
+      return document.execCommand('copy', true, url)
     }
   }
 
@@ -207,15 +241,13 @@ export default function ArticlePage(){
             <button
               type='button'
               aria-label='Copy this article link to share'
-              className={`mx-4 ${styles.studyPrayShareButton}`}>
+              className={`mx-4 ${styles.studyPrayShareButton}`}
+              onClick={copyTextToClipboard}>
               <img src='/images/link-icon.svg' />
-            </button>
 
-            <button
-              type='button'
-              aria-label='Share this article on Facebook'
-              className={styles.studyPrayShareButton}>
-              <img src='/images/fb-icon.svg' />
+              <span className='ml-3'>
+                {copied ? 'Copied!' : 'Copy Link'}
+              </span>
             </button>
           </div>
         </div>

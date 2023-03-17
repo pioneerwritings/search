@@ -1,4 +1,4 @@
-import { ActionFunction, LoaderFunction } from '@remix-run/node'
+import { ActionFunction, LoaderFunction, MetaFunction } from '@remix-run/node'
 import { useLoaderData, useFetcher, Link, useLocation } from '@remix-run/react'
 import { ChangeEvent, useState, useRef, useEffect } from 'react'
 import { Show } from '~/components'
@@ -7,6 +7,7 @@ import { amountPickerStyles } from '~/styles/components/amountPicker'
 import { stripe, stripekey } from '~/stripe.server'
 import { loadStripe } from '@stripe/stripe-js'
 import { formatValue } from '~/utils'
+import { ogImagePath } from '~/config'
 
 import Stripe from 'stripe'
 import classNames from 'classnames'
@@ -67,6 +68,21 @@ interface Price {
 interface LoaderData {
   prices: ExpandedPrice[],
   stripekey: string
+}
+
+export const meta: MetaFunction = () => {
+  const title       = 'Donate — Pioneer Writings'
+  const description = 'Thank you for your supporting this ministry.'
+
+  return {
+    charset: "utf-8",
+    title,
+    description,
+    'og:title': title,
+    'og:description': description,
+    'og:image': ogImagePath,
+    'og:type': 'website'
+  }
 }
 
 export default function DonatePage(){
