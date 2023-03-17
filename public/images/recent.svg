@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="20px" viewBox="0 0 21 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Articles-Copy-6" transform="translate(-396.000000, -828.000000)" stroke="#000000" stroke-width="1.5">
+            <g id="synchronize-arrow-clock" transform="translate(396.500000, 828.000000)">
+                <path d="M11.25,18.3333333 C15.7373136,18.3333333 19.375,14.6956469 19.375,10.2083333 C19.375,5.72101974 15.7373136,2.08333333 11.25,2.08333333 C6.76268641,2.08333333 3.125,5.72101974 3.125,10.2083333 L3.125,10.8333333" id="Shape"></path>
+                <polyline id="Shape" points="0.625 8.33083333 3.125 10.8308333 5.625 8.33083333"></polyline>
+                <polyline id="Shape" points="10.625 5.20583333 10.625 10.8308333 15 10.8308333"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

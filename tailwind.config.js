@@ -15,11 +15,13 @@ module.exports = {
         indigo: '#3E3BC9',
         cornflower: '#7275F0',
         ash: '#767684',
-        $red: '#D90100'
+        $red: '#D90100',
+        midnight: '#0C0C3C'
       }
     },
   },
   plugins: [
-    require("@thoughtbot/tailwindcss-aria-attributes")
+    require("@thoughtbot/tailwindcss-aria-attributes"),
+    require('tailwind-scrollbar')
   ],
 }

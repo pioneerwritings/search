@@ -17,4 +17,16 @@
     url('/fonts/heldane-display-web-regular.woff2') format('woff2');
     font-display: fallback;
   }
+
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input:focus {
+    outline:none;
+  }
 }

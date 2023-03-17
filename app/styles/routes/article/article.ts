@@ -42,6 +42,7 @@ export const styles = {
     mt-6
   `,
   periodical: `
+    periodical 
     text-center
     font-light
     mt-1
@@ -116,12 +117,10 @@ export const styles = {
     bg-white
     flex 
     items-center 
-    justify-center 
-    w-10 
+    justify-between
+    px-4 
     h-10 
-    cursor-pointer 
-    hover:shadow-lg 
-    hover:shadow-indigo 
+    cursor-pointer
     transition-all 
     hover:scale-110 
     active:scale-100 

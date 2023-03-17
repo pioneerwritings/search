@@ -1,14 +1,15 @@
-import { LoaderFunction, json } from '@remix-run/node'
+import { json, MetaFunction, LoaderArgs } from '@remix-run/node'
 import { useLoaderData, useNavigate, useLocation } from '@remix-run/react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Show } from '~/components'
-import { isSeries, normalizeArticle, normalizeSeries } from '~/utils'
+import { normalizeArticle, normalizeSeries } from '~/utils'
 import { styles } from '~/styles/routes/article/article'
-import { CMSSingleArticleResponse, Article, CMSSeriesResponse } from '~/types'
+import { CMSSingleArticleResponse, Article, CMSSingleSeriesResponse } from '~/types'
 import { useScrollBottom } from '~/hooks'
 import { fetchData } from '~/fetchers'
 import { useRecoilState } from 'recoil'
 import { footerState as FooterState } from '~/state'
+import { ogImagePath } from '~/config'
 
 import markStyles from '~/styles/routes/article/mark.css'
 import Highlight from 'mark.js'
@@ -27,48 +28,47 @@ interface LocationState {
   query?: string
 }
 
-export const loader: LoaderFunction = async ({ params }) => { 
-  const res = await fetchData<CMSSingleArticleResponse>(
+export const loader = async ({ params }: LoaderArgs) => {
+  const response = await fetchData<CMSSingleArticleResponse>(
     `articles/${params.id}`
   )
 
-  const article = normalizeArticle(res.data)
+  const article = normalizeArticle(response.data)
   const title = article?.title
-  const part = isSeries(title) as string
+  const series = article?.series
   
-  if(!isSeries(title)){
-    return json({ article })
-  }
-
-  const name   = title.split('—').filter(str => !Number(str)).join('—').trim()
-  const res2   = (await fetchData<CMSSeriesResponse>('series', `filters[name][$eq]=${name.trim()}`)).data
-  const series = normalizeSeries(res2[0])
-
   if(!series){
     return json({ article })
   }
-  const num = series.articles.findIndex((a) => a.title === title) + 1
-  const len = series.articles.length
+
+  const { id, name } = series 
+  const res = (await fetchData<CMSSingleSeriesResponse>(`series/${id}`)).data
+
+  const { articles } = normalizeSeries(res)
+
+  const num = articles.findIndex((a) => a.title === title) + 1
+  const len = articles.length
 
   const prevArticle = (): string | null => {
     if(num > 1){
       const index = num - 2
-      return series.articles[index].id
+      return articles[index].id
     }
     return null
   }
 
   const nextArticle = (): string | null => {
     if(num < len){
-      return series.articles[num].id
+      return articles[num].id
     }
     return null
   }
 
   return json<LoaderResponse>({
-    article, series: {
+    article, 
+    series: {
       name,
-      part,
+      part: String(num),
       prev: prevArticle(),
       next: nextArticle()
     }
@@ -79,7 +79,23 @@ export const links = () => [
   { rel: 'stylesheet', href: markStyles }
 ]
 
+export const meta: MetaFunction = ({ data }) => {
+  const title = data.article.title.trim()
+  const excerpt = data.article.excerpt.trim()
+
+  return {
+    charset: "utf-8",
+    title,
+    description: excerpt,
+    'og:title': title,
+    'og:description': excerpt,
+    'og:image': ogImagePath,
+    'og:type': 'article'
+  }
+}
+
 export default function ArticlePage(){
+  const [copied, setCopied] = useState(false)
   const { article, series } = useLoaderData<LoaderResponse>()
   const { state } = useLocation<LocationState>()
   const [ _, setFooterState] = useRecoilState(FooterState)
@@ -95,6 +111,10 @@ export default function ArticlePage(){
       bottom
     })
   }, [bottom])
+
+  useEffect(() => {
+    setTimeout(() => setCopied(false), 7000)
+  }, [copied])
 
   useEffect(() => {
     if(bodyRef.current && state?.query){
@@ -128,6 +148,18 @@ export default function ArticlePage(){
   const handleNextClick = () => {
     if(series?.next){
       navigate(`/articles/${series.next}`)
+    }
+  }
+
+  const copyTextToClipboard = async () => {
+    if (typeof window !== 'undefined') {
+      const url = window.location.href
+
+      if('clipboard' in navigator){
+        setCopied(true)
+        return await navigator.clipboard.writeText(url)
+      }
+      return document.execCommand('copy', true, url)
     }
   }
 
@@ -209,15 +241,13 @@ export default function ArticlePage(){
             <button
               type='button'
               aria-label='Copy this article link to share'
-              className={`mx-4 ${styles.studyPrayShareButton}`}>
+              className={`mx-4 ${styles.studyPrayShareButton}`}
+              onClick={copyTextToClipboard}>
               <img src='/images/link-icon.svg' />
-            </button>
 
-            <button
-              type='button'
-              aria-label='Share this article on Facebook'
-              className={styles.studyPrayShareButton}>
-              <img src='/images/fb-icon.svg' />
+              <span className='ml-3'>
+                {copied ? 'Copied!' : 'Copy Link'}
+              </span>
             </button>
           </div>
         </div>

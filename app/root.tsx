@@ -1,7 +1,6 @@
 import {
   type ErrorBoundaryComponent,
   type LinksFunction, 
-  type LoaderFunction,
   json, 
   MetaFunction 
 } from '@remix-run/node'
@@ -17,21 +16,28 @@ import {
 } from '@remix-run/react'
 
 import { RecoilRoot } from 'recoil'
-import { Header, Footer, Search } from './components'
+import { Header, Footer, Search, MobileNav, GA4 } from './components'
 import { rootStyles } from './styles/root'
 import { links as algoliaSearchLinks } from '~/components/search'
+import { ogImagePath } from './config'
 
 import styles from './styles/app.css'
 
-interface LoaderResponse {
-  env: Record<string, string | undefined>
-}
+export const meta: MetaFunction = () => {
+  const title       = 'Pioneer Writings'
+  const description = 'Let the dead speak through their works.'
 
-export const meta: MetaFunction = () => ({
-  charset: 'utf-8',
-  title: 'Pioneer Writings',
-  viewport: 'width=device-width,initial-scale=1, user-scalable=yes',
-})
+  return {
+    charset: 'utf-8',
+    title,
+    description,
+    viewport: 'width=device-width,initial-scale=1, user-scalable=yes',
+    'og:title': title,
+    'og:description': description,
+    'og:image': ogImagePath,
+    'og:type': 'website'
+  }
+}
 
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -41,21 +47,23 @@ export const links: LinksFunction = () => [
   ...algoliaSearchLinks()
 ]
 
-export const loader: LoaderFunction = async () => {
-  return json<LoaderResponse>({
+export const loader = async () => {
+  return json({
     env: {
       STRAPI_API_URL: process.env.STRAPI_API_URL,
       PREVIEW_SECRET: process.env.PREVIEW_SECRET,
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
       ALGOLIA_SEARCH_KEY: process.env.ALGOLIA_SEARCH_KEY,
       ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
-      PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID
+      PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
+      GA_TRACKING_ID: process.env.GA_TRACKING_ID,
+      NODE_ENV: process.env.NODE_ENV
     }
   })
 }
 
 export default function App() {
-  const data = useLoaderData<LoaderResponse>()
+  const { env } = useLoaderData<typeof loader>()
 
   return (
     <html lang='en-US'>
@@ -66,9 +74,15 @@ export default function App() {
       
       <body>
         <RecoilRoot>
+          <GA4 
+            trackingID={env.GA_TRACKING_ID!} 
+            env={env.NODE_ENV}
+          />
+
           <div className={rootStyles}>
             <Search />
             <Header />
+            <MobileNav />
             <Outlet />
             <Footer />
           </div>
@@ -76,7 +90,7 @@ export default function App() {
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{__html: 
-            `window.env = ${JSON.stringify(data.env)}`
+            `window.env = ${JSON.stringify(env)}`
           }}>
         </script>
         <Scripts />

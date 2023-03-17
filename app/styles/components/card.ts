@@ -19,8 +19,8 @@ export const styles = {
     lg:active:scale-100
     lg:focus:shadow-lg
     lg:focus:shadow-cornflower/40
-    lg:focus:border-indigo/70
-    lg:focus:outline-0
+    lg:focus:outline-indigo/70
+    lg:focus:outline-2
     lg:focus:scale-105
   `,
   header: `
