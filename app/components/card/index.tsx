@@ -4,7 +4,6 @@ import { styles } from '~/styles/components/card'
 import { Article } from '~/types'
 import { truncateText } from '~/utils'
 import { useGoogleAnalytics } from '~/hooks'
-import { isProduction } from '~/config'
 
 type CardProps = Pick<Article, 'id' | 'author' | 'topic'| 'periodical'> & {
   heading: string
@@ -23,15 +22,13 @@ export function Card<T extends CardProps>(props: T) {
   const handleKeypress = () => navigate(link)
 
   const handleClick = () => {
-    if(isProduction){
-      GA4?.gtag('event', 'card_click', {
-        title: heading,
-        author,
-        topic,
-        periodical,
-        isSeries: !!seriesLabel
-      })
-    }
+    GA4?.gtag('event', 'card_click', {
+      title: heading,
+      author,
+      topic,
+      periodical,
+      isSeries: !!seriesLabel
+    })
   }
 
   return (

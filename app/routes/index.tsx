@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react'
 import { fetchData } from '~/fetchers'
 import { styles } from '~/styles/home'
 import { footerState } from '~/state'
-import { isProduction } from '~/config'
 
 import {
   type Article,
@@ -114,9 +113,10 @@ export default function Index() {
   const handleTopicChange = (topic: string) => {
     setTopic(topic)
     
-    if(isProduction){
-      GA4?.gtag('event', 'topic_select', { topic })
-    }
+    GA4?.gtag(
+      'event', 
+      'topic_select', { topic }
+    )
   }
 
   return (
