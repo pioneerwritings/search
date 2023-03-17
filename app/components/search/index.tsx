@@ -11,7 +11,6 @@ import { LocalStorageMiddleware } from './middleware'
 import styles from '~/styles/components/search.css'
 
 export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic'},
   { rel: 'stylesheet', href: styles }
 ]
 

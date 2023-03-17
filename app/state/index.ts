@@ -1,4 +1,5 @@
 import { atom } from 'recoil'
+import { GA4ReactResolveInterface } from 'ga-4-react/dist/models/gtagModels'
 
 interface SearchState {
   active: boolean
@@ -14,6 +15,11 @@ interface FooterState {
 interface NavState {
   active: boolean
 }
+
+export const GA4State = atom<GA4ReactResolveInterface>({
+  key: 'GA4',
+  default: undefined
+})
 
 export const searchState = atom<SearchState>({
   key: 'search',

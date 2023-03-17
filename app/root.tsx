@@ -16,7 +16,7 @@ import {
 } from '@remix-run/react'
 
 import { RecoilRoot } from 'recoil'
-import { Header, Footer, Search, MobileNav } from './components'
+import { Header, Footer, Search, MobileNav, GA4 } from './components'
 import { rootStyles } from './styles/root'
 import { links as algoliaSearchLinks } from '~/components/search'
 
@@ -44,7 +44,9 @@ export const loader = async () => {
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
       ALGOLIA_SEARCH_KEY: process.env.ALGOLIA_SEARCH_KEY,
       ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
-      PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID
+      PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
+      GA_TRACKING_ID: process.env.GA_TRACKING_ID,
+      NODE_ENV: process.env.NODE_ENV
     }
   })
 }
@@ -61,6 +63,11 @@ export default function App() {
       
       <body>
         <RecoilRoot>
+          <GA4 
+            trackingID={env.GA_TRACKING_ID!} 
+            env={env.NODE_ENV}
+          />
+
           <div className={rootStyles}>
             <Search />
             <Header />
