@@ -2,7 +2,13 @@ import { searchState } from '~/state'
 import { useRecoilState } from 'recoil'
 import { useRef, useEffect } from 'react'
 import { LinksFunction } from '@remix-run/node'
-import { Configure, InstantSearch, SearchBox } from 'react-instantsearch-hooks-web'
+
+import {
+  Configure,
+  InstantSearch,
+  SearchBox
+} from 'react-instantsearch-hooks-web'
+
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useAlgoliaClient } from '~/hooks'
 import { Results } from './results'
@@ -10,9 +16,7 @@ import { LocalStorageMiddleware } from './middleware'
 
 import styles from '~/styles/components/search.css'
 
-export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: styles }
-]
+export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
 export const Search = () => {
   const [state, setState] = useRecoilState(searchState)
@@ -20,7 +24,7 @@ export const Search = () => {
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
-    if(formRef.current){
+    if (formRef.current) {
       const input = formRef.current.elements[0] as HTMLInputElement
       input.focus()
     }
@@ -40,15 +44,18 @@ export const Search = () => {
   })
 
   const SubmitButton = () => {
-    return (
-      <img src='/images/search.svg' className='w-5' />
-    )
+    return <img src='/images/search.svg' className='w-5' />
   }
 
-  if(client){
+  if (client) {
     return (
-      <div className='search-backdrop fixed w-screen h-screen z-50 left-0 backdrop-blur-md bg-ash/30 cursor-pointer' style={{ display: state.active ? 'block' : 'none'}} onClick={handleClose}>
-        <div className='search-modal bg-white rounded-xl mx-4 max-w-xl md:max-w-2xl sm:mx-auto my-8 flex flex-col' onClick={(e) => e.stopPropagation()}>
+      <div
+        className='search-backdrop fixed w-screen h-screen z-50 left-0 backdrop-blur-md bg-ash/30 cursor-pointer'
+        style={{ display: state.active ? 'block' : 'none' }}
+        onClick={handleClose}>
+        <div
+          className='search-modal bg-white rounded-xl mx-4 max-w-xl md:max-w-2xl sm:mx-auto my-8 flex flex-col'
+          onClick={(e) => e.stopPropagation()}>
           <InstantSearch indexName='articles' searchClient={client}>
             <Configure
               snippetEllipsisText='...'
@@ -56,11 +63,10 @@ export const Search = () => {
               hitsPerPage={50}
               advancedSyntax
               restrictHighlightAndSnippetArrays
-
             />
 
             <LocalStorageMiddleware />
-            
+
             <div className='w-full flex items-center justify-between px-6 border-b border-b-gray'>
               <SearchBox
                 submitIconComponent={SubmitButton}
@@ -71,9 +77,11 @@ export const Search = () => {
                 formRef={formRef}
                 classNames={{
                   root: 'w-full',
-                  input: 'search w-full h-14 appearance-none flex pl-4 pr-2 md:px-4 bg-white rounded-none focus:outline-none focus:border-none',
+                  input:
+                    'search w-full h-14 appearance-none flex pl-4 pr-2 md:px-4 bg-white rounded-none focus:outline-none focus:border-none',
                   form: 'flex items-center flex-row-reverse w-full relative',
-                  reset: 'invisible sm:visible absolute right-6 hover:bg-gray-100'
+                  reset:
+                    'absolute right-3 hover:bg-gray-100 p-[5px] border border-gray-300 rounded-full'
                 }}
               />
 
