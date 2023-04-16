@@ -1,23 +1,23 @@
-import { Snippet } from "react-instantsearch-hooks-web";
-import { Show } from "~/components";
-import { searchState } from "~/state";
-import { Link } from "@remix-run/react";
-import { useRecoilState } from "recoil";
+import { Snippet } from 'react-instantsearch-hooks-web'
+import { Show } from '~/components'
+import { searchState } from '~/state'
+import { Link } from '@remix-run/react'
+import { useRecoilState } from 'recoil'
 
 interface Props {
-  query?: string;
-  hit?: any;
+  query?: string
+  hit?: any
 }
 
 export const Hit = ({ hit, query }: Props) => {
-  const [_, setState] = useRecoilState(searchState);
+  const [_, setState] = useRecoilState(searchState)
 
   const handleClick = () => {
-    setState(s => ({ ...s, active: false }));
-  };
+    setState((s) => ({ ...s, active: false }))
+  }
 
   return (
-    <Show when={query !== ""}>
+    <Show when={query !== ''}>
       <Link
         to={`/articles/${hit.objectID}`}
         onClick={handleClick}
@@ -36,7 +36,7 @@ export const Hit = ({ hit, query }: Props) => {
                 attribute='body'
                 classNames={{
                   highlighted:
-                    "text-indigo font-bold bg-cornflower/25 rounded-md",
+                    'text-indigo font-bold bg-cornflower/25 rounded-md'
                 }}
               />
             </p>
@@ -50,5 +50,5 @@ export const Hit = ({ hit, query }: Props) => {
         </div>
       </Link>
     </Show>
-  );
-};
+  )
+}

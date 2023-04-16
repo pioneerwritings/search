@@ -628,10 +628,6 @@ input:focus {
   visibility: visible !important;
 }
 
-.invisible {
-  visibility: hidden;
-}
-
 .fixed {
   position: fixed;
 }
@@ -660,8 +656,8 @@ input:focus {
   bottom: 2rem;
 }
 
-.right-6 {
-  right: 1.5rem;
+.right-3 {
+  right: 0.75rem;
 }
 
 .right-0 {
@@ -670,10 +666,6 @@ input:focus {
 
 .right-2 {
   right: 0.5rem;
-}
-
-.right-3 {
-  right: 0.75rem;
 }
 
 .z-10 {
@@ -1212,6 +1204,11 @@ input:focus {
   background-color: rgb(0 0 0 / var(--tw-bg-opacity)) !important;
 }
 
+.bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+
 .p-8 {
   padding: 2rem;
 }
@@ -1220,20 +1217,16 @@ input:focus {
   padding: 0px;
 }
 
+.p-\[5px\] {
+  padding: 5px;
+}
+
 .p-1 {
   padding: 0.25rem;
 }
 
 .p-4 {
   padding: 1rem;
-}
-
-.p-3 {
-  padding: 0.75rem;
-}
-
-.p-\[5px\] {
-  padding: 5px;
 }
 
 .px-4 {
@@ -1474,11 +1467,6 @@ input:focus {
   color: rgb(118 118 132 / var(--tw-text-opacity));
 }
 
-.\!text-cornflower {
-  --tw-text-opacity: 1 !important;
-  color: rgb(114 117 240 / var(--tw-text-opacity)) !important;
-}
-
 .text-cornflower {
   --tw-text-opacity: 1;
   color: rgb(114 117 240 / var(--tw-text-opacity));
@@ -1681,6 +1669,12 @@ input:focus {
   background-color: rgb(114 117 240 / var(--tw-bg-opacity));
 }
 
+.after\:bg-black::after {
+  content: var(--tw-content);
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
 .after\:transition-all::after {
   content: var(--tw-content);
   transition-property: all;
@@ -1850,10 +1844,6 @@ input:focus {
 }
 
 @media (min-width: 640px) {
-  .sm\:visible {
-    visibility: visible;
-  }
-
   .sm\:mx-auto {
     margin-left: auto;
     margin-right: auto;
