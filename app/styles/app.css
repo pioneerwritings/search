@@ -1204,11 +1204,6 @@ input:focus {
   background-color: rgb(0 0 0 / var(--tw-bg-opacity)) !important;
 }
 
-.bg-gray-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
-}
-
 .p-8 {
   padding: 2rem;
 }
@@ -1661,12 +1656,6 @@ input:focus {
 .after\:rounded-xl::after {
   content: var(--tw-content);
   border-radius: 0.75rem;
-}
-
-.after\:bg-cornflower::after {
-  content: var(--tw-content);
-  --tw-bg-opacity: 1;
-  background-color: rgb(114 117 240 / var(--tw-bg-opacity));
 }
 
 .after\:bg-black::after {
