@@ -1,9 +1,4 @@
-import {
-  type ErrorBoundaryComponent,
-  type LinksFunction, 
-  json, 
-  MetaFunction 
-} from '@remix-run/node'
+import { type LinksFunction, json, type V2_MetaFunction } from '@remix-run/node'
 
 import {
   Links,
@@ -23,29 +18,47 @@ import { ogImagePath } from './config'
 
 import styles from './styles/app.css'
 
-export const meta: MetaFunction = () => {
-  const title       = 'Pioneer Writings'
+export const meta: V2_MetaFunction = () => {
+  const title = 'Pioneer Writings'
   const description = 'Let the dead speak through their works.'
 
-  return {
-    charset: 'utf-8',
-    title,
-    description,
-    viewport: 'width=device-width,initial-scale=1, user-scalable=yes',
-    'og:title': title,
-    'og:description': description,
-    'og:image': ogImagePath,
-    'og:type': 'website'
-  }
+  return [
+    { title },
+    { charSet: 'utf-8' },
+    {
+      name: 'og:type',
+      content: 'Website'
+    },
+    {
+      name: 'description',
+      content: description
+    },
+    {
+      name: 'viewport',
+      content: 'width=device-width,initial-scale=1,user-scalable=yes'
+    },
+    {
+      name: 'description',
+      content: 'The latest updates and news from the Pioneer Writings team.'
+    },
+    {
+      property: 'og:image',
+      content: ogImagePath
+    }
+  ]
 }
 
 export const links: LinksFunction = () => [
-  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-  { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
-  { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap' },
   { rel: 'stylesheet', href: styles },
   ...algoliaSearchLinks()
 ]
+
+export function headers() {
+  return {
+    'Cache-Control':
+      's-max-age=2592000, stale-while-revalidate=86400, stale-if-error=604800'
+  }
+}
 
 export const loader = async () => {
   return json({
@@ -70,14 +83,13 @@ export default function App() {
       <head>
         <Meta />
         <Links />
+        <link rel='preconnect' href='https://rsms.me/' />
+        <link rel='stylesheet' href='https://rsms.me/inter/inter.css' />
       </head>
-      
+
       <body>
         <RecoilRoot>
-          <GA4 
-            trackingID={env.GA_TRACKING_ID!} 
-            env={env.NODE_ENV}
-          />
+          <GA4 trackingID={env.GA_TRACKING_ID!} env={env.NODE_ENV} />
 
           <div className={rootStyles}>
             <Search />
@@ -89,10 +101,9 @@ export default function App() {
         </RecoilRoot>
         <ScrollRestoration />
         <script
-          dangerouslySetInnerHTML={{__html: 
-            `window.env = ${JSON.stringify(env)}`
-          }}>
-        </script>
+          dangerouslySetInnerHTML={{
+            __html: `window.env = ${JSON.stringify(env)}`
+          }}></script>
         <Scripts />
         <LiveReload />
       </body>
@@ -100,7 +111,7 @@ export default function App() {
   )
 }
 
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+export const ErrorBoundary = ({ error }) => {
   console.error(error.message)
 
   return (

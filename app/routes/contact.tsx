@@ -1,8 +1,9 @@
-import { ActionArgs, json, MetaFunction } from "@remix-run/node"
-import { Form, useActionData, useTransition } from "@remix-run/react"
-import { InputHTMLAttributes } from "react"
-import { Show } from "~/components"
-import { ogImagePath } from "~/config"
+import { type V2_MetaFunction, type ActionArgs, json } from '@remix-run/node'
+
+import { Form, useActionData, useNavigation } from '@remix-run/react'
+import { InputHTMLAttributes } from 'react'
+import { Show } from '~/components'
+import { ogImagePath } from '~/config'
 
 import Classnames from 'classnames'
 
@@ -31,17 +32,17 @@ export const action = async ({ request }: ActionArgs) => {
   const email = form.get('email')
   const message = form.get('message')
 
-  for(const field of form.entries()){
-    const [name, value ] = field
+  for (const field of form.entries()) {
+    const [name, value] = field
 
-    if(!value) {
+    if (!value) {
       errors[name] = `${name} is required.`
     }
   }
 
-  if(Object.keys(errors).length >= 1){
+  if (Object.keys(errors).length >= 1) {
     return json<ActionResponse>({
-      success: false, 
+      success: false,
       errors,
       form: Object.fromEntries(form)
     })
@@ -49,18 +50,18 @@ export const action = async ({ request }: ActionArgs) => {
 
   try {
     const testing = [
-      'This is a test from cypress', 
+      'This is a test from cypress',
       'This is a test from localhost'
     ].includes(message as string)
 
-    if(!testing){
+    if (!testing) {
       const nodemailer = require('nodemailer')
 
       const transport = nodemailer.createTransport({
         secure: true,
         port: 465,
         host: 'smtp.gmail.com',
-    
+
         auth: {
           user: process.env.GMAIL_USERNAME,
           pass: process.env.GMAIL_PASSWORD
@@ -95,8 +96,7 @@ export const action = async ({ request }: ActionArgs) => {
     return json<ActionResponse>({
       success: true
     })
-  }
-  catch(error){
+  } catch (error) {
     console.log('Email failed.', error)
 
     return json<ActionResponse>({
@@ -105,30 +105,28 @@ export const action = async ({ request }: ActionArgs) => {
   }
 }
 
-export const meta: MetaFunction = () => {
-  const title       = 'Contact — Pioneer Writings'
+export const meta: V2_MetaFunction = () => {
+  const title = 'Contact — Pioneer Writings'
   const description = 'Please feel free to contact us regarding any inquiry.'
 
-  return {
-    charset: "utf-8",
-    title,
-    description,
-    'og:title': title,
-    'og:description': description,
-    'og:image': ogImagePath,
-    'og:type': 'website'
-  }
+  return [
+    { title },
+    { name: 'description', content: description },
+    { name: 'og:title', content: title },
+    { name: 'og:description', content: description },
+    { name: 'og:image', content: ogImagePath }
+  ]
 }
 
-export default function ContactPage(){
+export default function ContactPage() {
   const data = useActionData<typeof action>()
-  const transition = useTransition()
+  const transition = useNavigation()
   const isSubmitting = transition.state === 'submitting'
 
   const Input = (props: InputProps) => {
     const { name, className, wrapperClass, textarea, error } = props
     const defaultValue = name && data?.form && data.form[name]
-    
+
     const inputStyles = `
       border 
       border-gray-300 
@@ -139,31 +137,28 @@ export default function ContactPage(){
       outline-0
     `
 
-    const containerClasses = Classnames(
-      'relative flex flex-col', {
-      [wrapperClass as string]: !!wrapperClass,
+    const containerClasses = Classnames('relative flex flex-col', {
+      [wrapperClass as string]: !!wrapperClass
     })
 
-    const inputClasses = Classnames(
-      inputStyles, {
-        [className as string]: !!className,
-        'border-red-500': error
-      }
-    )
+    const inputClasses = Classnames(inputStyles, {
+      [className as string]: !!className,
+      'border-red-500': error
+    })
 
-    const textareaClasses = Classnames(
-      inputClasses, 'resize-none'
-    )
+    const textareaClasses = Classnames(inputClasses, 'resize-none')
 
     return (
       <div className={containerClasses}>
-        <label className='capitalize mb-1 text-gray-600 font-medium text-xs pl-4' htmlFor={name}>
+        <label
+          className='capitalize mb-1 text-gray-600 font-medium text-xs pl-4'
+          htmlFor={name}>
           {name}
         </label>
-        
+
         <Show when={!!textarea}>
-          <textarea 
-            className={textareaClasses} 
+          <textarea
+            className={textareaClasses}
             placeholder={props.placeholder}
             name={name}
             defaultValue={defaultValue as string}
@@ -171,9 +166,9 @@ export default function ContactPage(){
         </Show>
 
         <Show when={!textarea}>
-          <input 
-            name={name} 
-            placeholder={props.placeholder} 
+          <input
+            name={name}
+            placeholder={props.placeholder}
             className={inputClasses}
             defaultValue={defaultValue as string}
           />
@@ -191,58 +186,58 @@ export default function ContactPage(){
   return (
     <div className='w-full min-h-screen pt-16 pb-36 px-8 antialiased flex flex-col items-center'>
       <h1 className='leading-tight text-center font-heldane-bold text-3xl md:text-[2.5rem] antialiased mb-4'>
-        { data?.success ? 'Success!' : 'Well Hello There.' }
+        {data?.success ? 'Success!' : 'Well Hello There.'}
       </h1>
 
       <p className='max-w-xl text-center antialiased font-light'>
-        {
-          data?.success ? 
-          'Thank you for your interest in Pioneer Writings. We\'ll get back to you as soon as possible. God bless you!' : 
-          `If you have any questions about what we're doing, our mission, or just want to say hello, feel free to send us a message!`
-        }
+        {data?.success
+          ? "Thank you for your interest in Pioneer Writings. We'll get back to you as soon as possible. God bless you!"
+          : `If you have any questions about what we're doing, our mission, or just want to say hello, feel free to send us a message!`}
       </p>
 
-      <Form method='post' className='mt-12 border border-gray-200 rounded-xl w-full max-w-lg p-8'>
+      <Form
+        method='post'
+        className='mt-12 border border-gray-200 rounded-xl w-full max-w-lg p-8'>
         <div className='md:flex md:items-center md:justify-between'>
           <Input
             type='text'
-            placeholder="First name"
-            name="first name"
-            aria-label="Enter your first name"
+            placeholder='First name'
+            name='first name'
+            aria-label='Enter your first name'
             wrapperClass='mb-4 md:mr-4 md:mb-0'
             error={data?.errors && data.errors['first name']}
           />
 
-          <Input 
-            type='text' 
-            placeholder="Last name" 
-            name="last name" 
-            aria-label="Enter your last name"
+          <Input
+            type='text'
+            placeholder='Last name'
+            name='last name'
+            aria-label='Enter your last name'
             error={data?.errors && data.errors['last name']}
           />
         </div>
 
-        <Input 
-          type='email' 
-          placeholder="Please enter your email" 
-          name='email' 
-          aria-label="Enter your email"
-          wrapperClass="w-full mt-4"
+        <Input
+          type='email'
+          placeholder='Please enter your email'
+          name='email'
+          aria-label='Enter your email'
+          wrapperClass='w-full mt-4'
           error={data?.errors && data.errors['email']}
         />
 
-        <Input 
+        <Input
           textarea
-          placeholder="What would you like to say?" 
-          name='message' 
-          aria-label="What would you like to say?"
-          wrapperClass="w-full mt-4"
-          className="h-40"
+          placeholder='What would you like to say?'
+          name='message'
+          aria-label='What would you like to say?'
+          wrapperClass='w-full mt-4'
+          className='h-40'
           error={data?.errors && data.errors['message']}
         />
 
-        <button 
-          type='submit' 
+        <button
+          type='submit'
           className='submit w-full px-4 py-6 text-center bg-black rounded-lg text-white font-extrabold mt-8 focus:ring focus:ring-3 ring-cornflower outline-0'
           disabled={isSubmitting}>
           {isSubmitting ? 'LOADING' : 'SUBMIT'}

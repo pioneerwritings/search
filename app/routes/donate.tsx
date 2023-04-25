@@ -1,4 +1,9 @@
-import { ActionFunction, LoaderFunction, MetaFunction } from '@remix-run/node'
+import type {
+  ActionFunction,
+  LoaderFunction,
+  V2_MetaFunction
+} from '@remix-run/node'
+
 import { useLoaderData, useFetcher, Link, useLocation } from '@remix-run/react'
 import { ChangeEvent, useState, useRef, useEffect } from 'react'
 import { Show } from '~/components'
@@ -24,20 +29,21 @@ export const action: ActionFunction = async ({ request }) => {
   const price = data.get('price') as string
   const other = Number(data.get('other') as string)
 
-
   const { id } = await stripe.checkout.sessions.create({
     mode: 'payment',
     success_url: `${url}/donate?checkoutID={CHECKOUT_SESSION_ID}`,
     cancel_url: `${url}/donate`,
 
-    line_items: (
-      price ? [{ price, quantity: 1 }] : [{
-        quantity: 1,
-        amount: other,
-        currency: 'usd',
-        name: `One-time ${formatValue(other)} donation to Pioneer Writings`
-      }]
-    )
+    line_items: price
+      ? [{ price, quantity: 1 }]
+      : [
+          {
+            quantity: 1,
+            amount: other,
+            currency: 'usd',
+            name: `One-time ${formatValue(other)} donation to Pioneer Writings`
+          }
+        ]
   })
 
   return { id }
@@ -46,15 +52,17 @@ export const action: ActionFunction = async ({ request }) => {
 export const loader: LoaderFunction = async ({ params }) => {
   const sid = params.sid
 
-  if(sid){
+  if (sid) {
     const session = await stripe.checkout.sessions.retrieve(sid)
     return { session }
   }
-  
+
   return {
-    stripekey, prices: (
+    stripekey,
+    prices: (
       await stripe.prices.list({
-        limit: 3, expand: ['data.product' ]
+        limit: 3,
+        expand: ['data.product']
       })
     ).data.reverse()
   }
@@ -66,50 +74,50 @@ interface Price {
 }
 
 interface LoaderData {
-  prices: ExpandedPrice[],
+  prices: ExpandedPrice[]
   stripekey: string
 }
 
-export const meta: MetaFunction = () => {
-  const title       = 'Donate — Pioneer Writings'
+export const meta: V2_MetaFunction = () => {
+  const title = 'Donate — Pioneer Writings'
   const description = 'Thank you for your supporting this ministry.'
 
-  return {
-    charset: "utf-8",
-    title,
-    description,
-    'og:title': title,
-    'og:description': description,
-    'og:image': ogImagePath,
-    'og:type': 'website'
-  }
+  return [
+    { title },
+    { name: 'description', content: description },
+    { name: 'og:title', content: title },
+    { name: 'og:description', content: description },
+    { name: 'og:image', content: ogImagePath }
+  ]
 }
 
-export default function DonatePage(){
+export default function DonatePage() {
   const { search } = useLocation()
-  const [ donated ] = useState(search.includes('checkoutID'))
-  const [ price, setPrice ] = useState<Price>()
-  const [ amount, setAmount ] = useState<string>('')
-  const [ editing, setEditing ] = useState(false)
+  const [donated] = useState(search.includes('checkoutID'))
+  const [price, setPrice] = useState<Price>()
+  const [amount, setAmount] = useState<string>('')
+  const [editing, setEditing] = useState(false)
   const { state, data, submit, Form } = useFetcher()
   const { prices, stripekey } = useLoaderData<LoaderData>()
 
-  const optionOtherSelected = (price?.id === '0')
+  const optionOtherSelected = price?.id === '0'
   const otherInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if(editing){
+    if (editing) {
       otherInputRef?.current?.focus()
     }
   }, [editing])
 
   useEffect(() => {
     const checkout = async () => {
-      if(data?.id){
+      if (data?.id) {
         const stripe = await loadStripe(stripekey)
-        
-        if(stripe){
-          const { error } = await stripe.redirectToCheckout({ sessionId: data.id })
+
+        if (stripe) {
+          const { error } = await stripe.redirectToCheckout({
+            sessionId: data.id
+          })
           console.error(error)
         }
       }
@@ -120,7 +128,7 @@ export default function DonatePage(){
   const handleContinue = () => {
     const method = 'post'
 
-    if(price && price.id !== '0'){
+    if (price && price.id !== '0') {
       return submit({ price: price.id }, { method })
     }
     submit({ other: amount }, { method })
@@ -132,71 +140,69 @@ export default function DonatePage(){
     setAmount(event.target.value)
   }
 
-
   return (
     <div className={styles.page}>
       <h1 className={styles.h1}>
-       { donated ? 'Thank you!' : ' We appreciate your support.'}
+        {donated ? 'Thank you!' : ' We appreciate your support.'}
       </h1>
 
       <p className={styles.description}>
-        {
-          donated ?
-          `From the bottom of our hearts, thank you for
+        {donated
+          ? `From the bottom of our hearts, thank you for
            your support and belief in our mission. God bless you!
-          ` :
-          `If this service has been a blessing to you, please
-          consider helping us with a monetary contribution.`
-        }
+          `
+          : `If this service has been a blessing to you, please
+          consider helping us with a monetary contribution.`}
       </p>
 
       <Show when={!donated}>
         <Form action='/?index' className='mt-8 flex flex-col justify-center'>
-          
           <h2 className='mb-4 font-bold text-center'>
             Select a one-time amount
           </h2>
 
           <div
             className='border border-black rounded-xl flex'
-            role='radiogroup' aria-label='Select a one time amount' tabIndex={-1}>
-            
-            {
-              prices.map(({ id, product, unit_amount }, i) => {
-                const checked = (id === price?.id)
+            role='radiogroup'
+            aria-label='Select a one time amount'
+            tabIndex={-1}>
+            {prices.map(({ id, product, unit_amount }, i) => {
+              const checked = id === price?.id
 
-                return (
-                  <label tabIndex={0} key={id} className={
-                    classNames(
-                      amountPickerStyles.button,
-                      checked ? amountPickerStyles.selected : '',
-                      i === 0 ? 'rounded-l-xl' : ''
-                    )}>
+              return (
+                <label
+                  tabIndex={0}
+                  key={id}
+                  className={classNames(
+                    amountPickerStyles.button,
+                    checked ? amountPickerStyles.selected : '',
+                    i === 0 ? 'rounded-l-xl' : ''
+                  )}>
+                  {product.metadata.label}
 
-                    {product.metadata.label}
+                  <input
+                    type='radio'
+                    className='appearance-none'
+                    name='amount'
+                    id={id}
+                    onChange={() => {
+                      if (unit_amount) {
+                        handleAmountSelect({
+                          id,
+                          amount: unit_amount
+                        })
+                      }
+                    }}
+                    tabIndex={-1}
+                    aria-checked={checked}
+                    checked={checked}
+                  />
+                </label>
+              )
+            })}
 
-                    <input
-                      type='radio'
-                      className='appearance-none'
-                      name='amount'
-                      id={id}
-                      onChange={() => {
-                        if(unit_amount){
-                          handleAmountSelect({
-                            id, amount: unit_amount
-                          })
-                        }
-                      }}
-                      tabIndex={-1}
-                      aria-checked={checked}
-                      checked={checked}
-                    />
-                  </label>
-                )
-              })
-            }
-
-            <label tabIndex={0}
+            <label
+              tabIndex={0}
               onClick={() => setEditing(true)}
               className={classNames(
                 amountPickerStyles.button,
@@ -268,12 +274,7 @@ export default function DonatePage(){
       <Show when={donated}>
         <Link to='/' className={styles.goHome}>
           Go Home
-
-          <img
-            src='/images/right-arrow.svg'
-            aria-hidden
-            className='ml-2'
-          />
+          <img src='/images/right-arrow.svg' aria-hidden className='ml-2' />
         </Link>
       </Show>
     </div>

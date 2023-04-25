@@ -1,10 +1,14 @@
-import { json, MetaFunction, LoaderArgs } from '@remix-run/node'
+import { json, V2_MetaFunction, LoaderArgs } from '@remix-run/node'
 import { useLoaderData, useNavigate, useLocation } from '@remix-run/react'
 import { useEffect, useRef, useState } from 'react'
 import { Show } from '~/components'
 import { normalizeArticle, normalizeSeries } from '~/utils'
 import { styles } from '~/styles/routes/article/article'
-import { CMSSingleArticleResponse, Article, CMSSingleSeriesResponse } from '~/types'
+import type {
+  CMSSingleArticleResponse,
+  Article,
+  CMSSingleSeriesResponse
+} from '~/types'
 import { useScrollBottom } from '~/hooks'
 import { fetchData } from '~/fetchers'
 import { useRecoilState } from 'recoil'
@@ -36,12 +40,12 @@ export const loader = async ({ params }: LoaderArgs) => {
   const article = normalizeArticle(response.data)
   const title = article?.title
   const series = article?.series
-  
-  if(!series){
+
+  if (!series) {
     return json({ article })
   }
 
-  const { id, name } = series 
+  const { id, name } = series
   const res = (await fetchData<CMSSingleSeriesResponse>(`series/${id}`)).data
 
   const { articles } = normalizeSeries(res)
@@ -50,7 +54,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   const len = articles.length
 
   const prevArticle = (): string | null => {
-    if(num > 1){
+    if (num > 1) {
       const index = num - 2
       return articles[index].id
     }
@@ -58,14 +62,14 @@ export const loader = async ({ params }: LoaderArgs) => {
   }
 
   const nextArticle = (): string | null => {
-    if(num < len){
+    if (num < len) {
       return articles[num].id
     }
     return null
   }
 
   return json<LoaderResponse>({
-    article, 
+    article,
     series: {
       name,
       part: String(num),
@@ -75,30 +79,47 @@ export const loader = async ({ params }: LoaderArgs) => {
   })
 }
 
-export const links = () => [
-  { rel: 'stylesheet', href: markStyles }
-]
+export const links = () => [{ rel: 'stylesheet', href: markStyles }]
 
-export const meta: MetaFunction = ({ data }) => {
+export const meta: V2_MetaFunction = ({ data }) => {
   const title = data.article.title.trim()
   const excerpt = data.article.excerpt.trim()
 
-  return {
-    charset: "utf-8",
-    title,
-    description: excerpt,
-    'og:title': title,
-    'og:description': excerpt,
-    'og:image': ogImagePath,
-    'og:type': 'article'
-  }
+  return [
+    { title },
+    { charSet: 'utf-8' },
+    {
+      name: 'og:title',
+      content: title
+    },
+    {
+      name: 'og:description',
+      content: excerpt
+    },
+    {
+      name: 'og:type',
+      content: 'article'
+    },
+    {
+      name: 'description',
+      content: excerpt
+    },
+    {
+      name: 'viewport',
+      content: 'width=device-width,initial-scale=1,user-scalable=yes'
+    },
+    {
+      property: 'og:image',
+      content: ogImagePath
+    }
+  ]
 }
 
-export default function ArticlePage(){
+export default function ArticlePage() {
   const [copied, setCopied] = useState(false)
   const { article, series } = useLoaderData<LoaderResponse>()
   const { state } = useLocation<LocationState>()
-  const [ _, setFooterState] = useRecoilState(FooterState)
+  const [_, setFooterState] = useRecoilState(FooterState)
   const { bottom } = useScrollBottom()
   const { title, subtitle, author, body, periodical } = article
 
@@ -117,11 +138,10 @@ export default function ArticlePage(){
   }, [copied])
 
   useEffect(() => {
-    if(bodyRef.current && state?.query){
+    if (bodyRef.current && state?.query) {
       const { query } = state
 
-      new Highlight(bodyRef.current).mark(
-        query, {
+      new Highlight(bodyRef.current).mark(query, {
         diacritics: true,
         ignorePunctuation: [`'`, `"`],
 
@@ -130,23 +150,20 @@ export default function ArticlePage(){
           limiters: [',', '.', '?', '!', ';', ':', '-', '—']
         },
         filter: (node, term, totalCounter, counter) => {
-          return (
-            query.split(' ').includes(term) && 
-            counter > 35 ? false : true
-          )
+          return query.split(' ').includes(term) && counter > 35 ? false : true
         }
       })
     }
   }, [state])
 
   const handlePrevClick = () => {
-    if(series?.prev){
+    if (series?.prev) {
       navigate(`/articles/${series.prev}`)
     }
   }
 
   const handleNextClick = () => {
-    if(series?.next){
+    if (series?.next) {
       navigate(`/articles/${series.next}`)
     }
   }
@@ -155,7 +172,7 @@ export default function ArticlePage(){
     if (typeof window !== 'undefined') {
       const url = window.location.href
 
-      if('clipboard' in navigator){
+      if ('clipboard' in navigator) {
         setCopied(true)
         return await navigator.clipboard.writeText(url)
       }
@@ -167,9 +184,7 @@ export default function ArticlePage(){
     <article className={styles.article}>
       <main className={styles.main} role='main'>
         <Show when={!!series}>
-          <span className={styles.badge}>
-            {`Part ${series?.part}`}
-          </span>
+          <span className={styles.badge}>{`Part ${series?.part}`}</span>
         </Show>
 
         <h1 className={styles.h1}>{series?.name || title}</h1>
@@ -177,20 +192,20 @@ export default function ArticlePage(){
         <address className={styles.author}>By {author}</address>
 
         <Show when={!!subtitle}>
-          <small className={styles.subtitle}>
-            {subtitle}
-          </small>
+          <small className={styles.subtitle}>{subtitle}</small>
         </Show>
 
         <div className='body' ref={bodyRef}>
-          {
-            body
+          {body
             .split('\n')
             .filter((p: string) => p !== '')
             .map((p: string, i: number) => {
-              return (<p className={styles.p} key={i}>{p}</p>)
-            })
-          }
+              return (
+                <p className={styles.p} key={i}>
+                  {p}
+                </p>
+              )
+            })}
         </div>
 
         <Show when={!!series}>
@@ -219,7 +234,6 @@ export default function ArticlePage(){
               disabled={!series?.next}
               aria-disabled={!series?.next}>
               Next Article
-
               <img
                 className='ml-4'
                 width={24}
@@ -231,7 +245,7 @@ export default function ArticlePage(){
             </button>
           </section>
         </Show>
-        
+
         <div className={styles.studyPrayShareContainer}>
           <h2 className={styles.studyPrayShareH2}>
             Study. Pray. <span className='text-indigo'>Share.</span>
@@ -245,9 +259,7 @@ export default function ArticlePage(){
               onClick={copyTextToClipboard}>
               <img src='/images/link-icon.svg' />
 
-              <span className='ml-3'>
-                {copied ? 'Copied!' : 'Copy Link'}
-              </span>
+              <span className='ml-3'>{copied ? 'Copied!' : 'Copy Link'}</span>
             </button>
           </div>
         </div>
