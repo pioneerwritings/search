@@ -1,4 +1,3 @@
-
 export const styles = {
   nav: `
     z-30 
@@ -35,8 +34,8 @@ export const styles = {
     items-center
   `,
   activeLink: `
-    text-cornflower
+    text-black
     font-bold
-    bg-cornflower/10
+    bg-gray-50
   `
 }

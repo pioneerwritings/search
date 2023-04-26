@@ -40,7 +40,6 @@ export const Results = () => {
     e.stopPropagation()
     deleteQuery(e.currentTarget.previousSibling?.textContent as string)
   }
-
   return (
     <Fragment>
       <Show when={!!query && hits.length === 0}>
