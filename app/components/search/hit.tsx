@@ -19,7 +19,7 @@ export const Hit = ({ hit, query }: Props) => {
   return (
     <Show when={query !== ''}>
       <Link
-        to={`/articles/${hit.objectID}`}
+        to={`/article/${hit.objectID}`}
         onClick={handleClick}
         state={{ query }}>
         <div className='w-full flex py-4 px-6 cursor-pointer relative items-center hover:bg-gray-50 justify-between border-b border-b-gray-200'>

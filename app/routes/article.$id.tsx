@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Show } from '~/components'
 import { normalizeArticle, normalizeSeries } from '~/utils'
 import { styles } from '~/styles/routes/article/article'
-import type {
+import {
   CMSSingleArticleResponse,
   Article,
   CMSSingleSeriesResponse
@@ -158,13 +158,13 @@ export default function ArticlePage() {
 
   const handlePrevClick = () => {
     if (series?.prev) {
-      navigate(`/articles/${series.prev}`)
+      navigate(`/article/${series.prev}`)
     }
   }
 
   const handleNextClick = () => {
     if (series?.next) {
-      navigate(`/articles/${series.next}`)
+      navigate(`/article/${series.next}`)
     }
   }
 

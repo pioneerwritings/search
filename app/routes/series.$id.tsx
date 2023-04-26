@@ -55,7 +55,7 @@ export default function SeriesPage() {
             return (
               <Card
                 {...s}
-                type='articles'
+                type='article'
                 seriesLabel={`Part ${i + 1}`}
                 id={s.id}
                 key={s.id}
