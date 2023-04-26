@@ -5,16 +5,17 @@ import { Article } from '~/types'
 import { truncateText } from '~/utils'
 import { useGoogleAnalytics } from '~/hooks'
 
-type CardProps = Pick<Article, 'id' | 'author' | 'topic'| 'periodical'> & {
+type CardProps = Pick<Article, 'id' | 'author' | 'topic' | 'periodical'> & {
   heading: string
   excerpt: string
-  type: 'articles' | 'series'
-  seriesLabel?: string  
+  type: 'article' | 'series'
+  seriesLabel?: string
 }
 
 export function Card<T extends CardProps>(props: T) {
   const { GA4 } = useGoogleAnalytics()
-  const { id, type, author, topic, excerpt, heading, periodical, seriesLabel } = props
+  const { id, type, author, topic, excerpt, heading, periodical, seriesLabel } =
+    props
 
   const navigate = useNavigate()
   const link = `/${type}/${id}`
@@ -40,16 +41,11 @@ export function Card<T extends CardProps>(props: T) {
         aria-label={heading}
         aria-describedby={id}
         tabIndex={0}>
-
         <header className={styles.header}>
-          <small className={styles.author}>
-            {author}
-          </small>
-    
+          <small className={styles.author}>{author}</small>
+
           <Show when={!!seriesLabel}>
-            <small className={styles.series}>
-              {seriesLabel}
-            </small>
+            <small className={styles.series}>{seriesLabel}</small>
           </Show>
         </header>
 
@@ -59,13 +55,9 @@ export function Card<T extends CardProps>(props: T) {
           {excerpt}—Click to read this article
         </p>
 
-        <p className={styles.p}>
-          {truncateText(excerpt, 70)}
-        </p>
+        <p className={styles.p}>{truncateText(excerpt, 70)}</p>
 
-        <small className={styles.topic}>
-          {topic}
-        </small>
+        <small className={styles.topic}>{topic}</small>
       </article>
     </Link>
   )

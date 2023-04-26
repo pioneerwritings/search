@@ -1,6 +1,5 @@
-
 describe('Article Page', () => {
-  beforeEach(() => cy.visit('/articles/573'))
+  beforeEach(() => cy.visit('/article/573'))
 
   it('Should render the heading', () => {
     cy.get('h1').should('contain', 'Justification by Faith')

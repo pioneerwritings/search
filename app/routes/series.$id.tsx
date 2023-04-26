@@ -11,7 +11,7 @@ import { useRecoilState } from 'recoil'
 import { ogSeriesImg } from '~/config'
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const series = (await fetchData<CMSSingleSeriesResponse>(`series/${params.id}`))
+  const series = await fetchData<CMSSingleSeriesResponse>(`series/${params.id}`)
   return normalizeSeries(series.data)
 }
 
@@ -20,7 +20,7 @@ export const meta: MetaFunction = ({ data }) => {
   const excerpt = data.description.trim()
 
   return {
-    charset: "utf-8",
+    charset: 'utf-8',
     title,
     description: excerpt,
     'og:title': title,
@@ -30,9 +30,9 @@ export const meta: MetaFunction = ({ data }) => {
   }
 }
 
-export default function SeriesPage(){
+export default function SeriesPage() {
   const { name, description, articles, author, topic } = useLoaderData<Series>()
-  const [_, setFooterState ] = useRecoilState(footerState)
+  const [_, setFooterState] = useRecoilState(footerState)
 
   useEffect(() => {
     setFooterState({
@@ -43,41 +43,31 @@ export default function SeriesPage(){
 
   return (
     <div className={styles.page}>
-      <span className={styles.series}>
-        Series
-      </span>
+      <span className={styles.series}>Series</span>
 
-      <h1 className={styles.h1}>
-        {name}
-      </h1>
+      <h1 className={styles.h1}>{name}</h1>
 
-      <span className={styles.author}>
-        By {author}
-      </span>
+      <span className={styles.author}>By {author}</span>
 
-      <p className={styles.description}>
-        {description}
-      </p>
+      <p className={styles.description}>{description}</p>
 
       <div className={styles.gridContainer}>
         <div className={styles.grid} role='grid'>
-          {
-            articles.map((s, i) => {
-              return (
-                <Card
-                  {...s}
-                  type='articles'
-                  seriesLabel={`Part ${i + 1}`}
-                  id={s.id}
-                  key={s.id}
-                  heading={name}
-                  excerpt={s.excerpt}
-                  author={author}
-                  topic={topic}
-                />
-              )
-            })
-          }
+          {articles.map((s, i) => {
+            return (
+              <Card
+                {...s}
+                type='article'
+                seriesLabel={`Part ${i + 1}`}
+                id={s.id}
+                key={s.id}
+                heading={name}
+                excerpt={s.excerpt}
+                author={author}
+                topic={topic}
+              />
+            )
+          })}
         </div>
       </div>
     </div>
