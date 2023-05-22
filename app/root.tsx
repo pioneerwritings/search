@@ -1,22 +1,24 @@
 import { type LinksFunction, json, type V2_MetaFunction } from '@remix-run/node'
 
 import {
+  isRouteErrorResponse,
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData
+  useLoaderData,
+  useRouteError
 } from '@remix-run/react'
 
 import { RecoilRoot } from 'recoil'
-import { Header, Footer, Search, MobileNav, GA4 } from './components'
+import { Header, Footer, Search, MobileNav, GA4, Show } from './components'
 import { rootStyles } from './styles/root'
 import { links as algoliaSearchLinks } from '~/components/search'
 import { ogImagePath } from './config'
 
-import styles from './styles/app.css'
+import tailwind from './tailwind.css'
 
 export const meta: V2_MetaFunction = () => {
   const title = 'Pioneer Writings'
@@ -49,7 +51,7 @@ export const meta: V2_MetaFunction = () => {
 }
 
 export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: styles },
+  { rel: 'stylesheet', href: tailwind },
   ...algoliaSearchLinks()
 ]
 
@@ -68,7 +70,6 @@ export const loader = async () => {
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
       ALGOLIA_SEARCH_KEY: process.env.ALGOLIA_SEARCH_KEY,
       ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
-      PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
       GA_TRACKING_ID: process.env.GA_TRACKING_ID,
       NODE_ENV: process.env.NODE_ENV
     }
@@ -111,8 +112,8 @@ export default function App() {
   )
 }
 
-export const ErrorBoundary = ({ error }) => {
-  console.error(error.message)
+export const ErrorBoundary = () => {
+  const error = useRouteError()
 
   return (
     <html>
@@ -122,20 +123,42 @@ export const ErrorBoundary = ({ error }) => {
         <Links />
       </head>
 
-      <body>
-        <div className='error-boundary'>
-          <span className='mx-auto'>
-            <img
-              className='mx-auto mt-16 mb-6'
-              src='/images/500.png'
-              alt='A picture of the 10 horned leopard beast described in Daniel chapter 7.'
-              tabIndex={0}
-            />
-          </span>
-          <p role='alert' className='text-center font-bold'>
-            Oh no! Something went terribly wrong.
-          </p>
+      <body className='px-10'>
+        <div className='border border-gray-300 rounded-xl max-w-xl mx-auto my-40 p-10'>
+          {isRouteErrorResponse(error) ? (
+            <>
+              <span className='text-xs text-black font-extrabold inline-block'>
+                {error.status} Error
+              </span>
+
+              <h1 className='font-extrabold text-xl lg:text-3xl mb-3'>
+                Oops! Something went wrong.
+              </h1>
+
+              <p className='text-red'>Error: {error.statusText}</p>
+            </>
+          ) : error instanceof Error ? (
+            <>
+              <span className='text-xs text-black font-extrabold inline-block'>
+                500 Error
+              </span>
+
+              <h1 className='font-extrabold text-xl lg:text-3xl mb-3'>
+                Oops! Something went wrong.
+              </h1>
+
+              <p className='text-red mb-3'>{error.message}</p>
+
+              <div className='overflow-x-auto'>
+                <code className='text-sm wrap text-gray-600'>
+                  <pre>{error.stack}</pre>
+                </code>
+              </div>
+            </>
+          ) : null}
         </div>
+        <Show when={isRouteErrorResponse(error)}></Show>
+
         <Scripts />
       </body>
     </html>

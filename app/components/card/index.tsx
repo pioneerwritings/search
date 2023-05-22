@@ -5,17 +5,27 @@ import { Article } from '~/types'
 import { truncateText } from '~/utils'
 import { useGoogleAnalytics } from '~/hooks'
 
-type CardProps = Pick<Article, 'id' | 'author' | 'topic' | 'periodical'> & {
-  heading: string
-  excerpt: string
+type Omitted = 'body' | 'slug'
+interface CardProps extends Omit<Article, Omitted> {
   type: 'article' | 'series'
-  seriesLabel?: string
+  heading: string
+  seriesLabel: string
+  excerpt: string
 }
 
-export function Card<T extends CardProps>(props: T) {
+export const Card = (props: CardProps) => {
   const { GA4 } = useGoogleAnalytics()
-  const { id, type, author, topic, excerpt, heading, periodical, seriesLabel } =
-    props
+
+  const {
+    id,
+    type,
+    periodical,
+    author,
+    topic,
+    excerpt,
+    heading,
+    seriesLabel = ''
+  } = props
 
   const navigate = useNavigate()
   const link = `/${type}/${id}`

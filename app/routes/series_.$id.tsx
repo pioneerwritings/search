@@ -1,4 +1,4 @@
-import type { LoaderFunction, V2_MetaFunction } from '@remix-run/node'
+import type { LoaderArgs, V2_MetaFunction } from '@remix-run/node'
 import { fetchData } from '~/fetchers'
 import { CMSSingleSeriesResponse, Series } from '~/types'
 import { useLoaderData } from '@remix-run/react'
@@ -10,7 +10,7 @@ import { footerState } from '~/state'
 import { useRecoilState } from 'recoil'
 import { ogSeriesImg } from '~/config'
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const series = await fetchData<CMSSingleSeriesResponse>(`series/${params.id}`)
   return normalizeSeries(series.data)
 }
@@ -29,7 +29,9 @@ export const meta: V2_MetaFunction = ({ data }) => {
 }
 
 export default function SeriesPage() {
-  const { name, description, articles, author, topic } = useLoaderData<Series>()
+  const { name, description, articles, author, topic } =
+    useLoaderData<typeof loader>()
+
   const [_, setFooterState] = useRecoilState(footerState)
 
   useEffect(() => {

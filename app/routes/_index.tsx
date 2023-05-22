@@ -1,10 +1,10 @@
-import { LoaderFunction } from '@remix-run/node'
-import { useLoaderData, useFetcher } from '@remix-run/react'
+import { defer, type LoaderArgs } from '@remix-run/node'
+import { useLoaderData, useFetcher, Await } from '@remix-run/react'
 import { Card, TopicsCarousel, Show } from '~/components'
 import { useRecoilState } from 'recoil'
 import { isSeries, normalizeArticle } from '~/utils'
 import { useScrollBottom, useGoogleAnalytics } from '~/hooks'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { fetchData } from '~/fetchers'
 import { styles } from '~/styles/home'
 import { footerState } from '~/state'
@@ -12,9 +12,7 @@ import { footerState } from '~/state'
 import {
   type Article,
   type CMSTopicResponse,
-  type CMSArticleResponse,
-  type CMSTopic,
-  type Series
+  type CMSArticleResponse
 } from '~/types'
 
 import Spinner from 'react-spinner-material'
@@ -22,7 +20,7 @@ import qs from 'qs'
 
 const LIMIT = 15
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const params = new URL(request.url).searchParams
 
   const q = qs.stringify(
@@ -37,30 +35,21 @@ export const loader: LoaderFunction = async ({ request }) => {
   )
 
   const res = await fetchData<CMSArticleResponse>('articles', q)
-  const res2 = await fetchData<CMSTopicResponse>('topics')
 
-  return {
+  return defer({
     total: res.meta?.pagination?.total,
-    topics: res2.data.map((topic) => topic.attributes.name),
+    topics: fetchData<CMSTopicResponse>('topics'),
     articles: res.data.map(normalizeArticle)
-  }
+  })
 }
 
 type FetcherResponse = {
   articles?: Article[]
-  topics?: CMSTopic[]
-  series?: Series[]
   results?: Article[]
 }
 
-type LoaderData = {
-  topics: string[]
-  articles: Article[]
-  total: number
-}
-
 export default function Index() {
-  const initialData = useLoaderData<LoaderData>()
+  const initialData = useLoaderData<typeof loader>()
 
   const [articles, setArticles] = useState<Article[]>(initialData.articles)
   const [results, setResults] = useState<Article[]>()
@@ -70,11 +59,9 @@ export default function Index() {
 
   const { data, load, state } = useFetcher<FetcherResponse>()
   const { bottom } = useScrollBottom()
-  const { topics } = initialData
   const { GA4 } = useGoogleAnalytics()
 
   const canScroll = articles.length !== initialData.total
-
   const articleList: Article[] = topic && results ? results : articles
 
   useEffect(() => {
@@ -91,7 +78,7 @@ export default function Index() {
   }, [topic])
 
   useEffect(() => {
-    if (canScroll && bottom && !topic) {
+    if (bottom && !topic) {
       const qs = new URLSearchParams([
         ['pagination[start]', String(start)],
         ['pagination[limit]', String(LIMIT)]
@@ -101,30 +88,39 @@ export default function Index() {
   }, [bottom])
 
   useEffect(() => {
-    if (data !== undefined) {
-      if (data.results) {
-        setResults(data.results)
-      }
-      if (data.articles) {
-        setStart(start + LIMIT)
-        setArticles([...articles, ...data.articles])
-      }
+    if (!data) return
+
+    if (data.results) {
+      setResults(data.results)
+    }
+    if (data.articles) {
+      setStart(start + LIMIT)
+      setArticles([...articles, ...data.articles])
     }
   }, [data])
 
   const handleTopicChange = (topic: string) => {
     setTopic(topic)
-
     GA4?.gtag('event', 'topic_select', { topic })
   }
 
   return (
     <div className={styles.page}>
-      <TopicsCarousel
-        data={topics}
-        onClick={handleTopicChange}
-        activeItem={topic ?? ''}
-      />
+      <Suspense fallback={<p>Loading...</p>}>
+        <Await resolve={initialData.topics}>
+          {({ data }) => {
+            const topics = data.map((t) => t.attributes.name)
+
+            return (
+              <TopicsCarousel
+                data={topics}
+                onClick={handleTopicChange}
+                activeItem={topic ?? ''}
+              />
+            )
+          }}
+        </Await>
+      </Suspense>
 
       <div
         className={styles.gridContainer}
