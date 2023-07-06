@@ -42,6 +42,31 @@ export function Card<T extends CardProps>(props: T) {
     })
   }
 
+  const Topics = () => {
+    // prevents topics from getting re-ordered
+    // when the card re-renders.
+    const sorted = topics.sort()
+
+    return (
+      <div className='flex items-center overflow-x-auto scrollbar-thin padding-0 scroll-smooth'>
+        {sorted.map((topic) => {
+          return (
+            <small
+              key={topic}
+              className={styles.topic}
+              onClick={(event: MouseEvent<HTMLElement>) => {
+                event.preventDefault()
+                event.stopPropagation()
+                handleTopicSelect(topic)
+              }}>
+              {topic}
+            </small>
+          )
+        })}
+      </div>
+    )
+  }
+
   return (
     <Link to={link} className='max-w-[368px] w-full' tabIndex={-1}>
       <article
@@ -67,22 +92,7 @@ export function Card<T extends CardProps>(props: T) {
 
         <p className={styles.p}>{truncateText(excerpt, 70)}</p>
 
-        <div className='flex items-center overflow-x-auto scrollbar-thin padding-0 scroll-smooth'>
-          {topics.map((topic) => {
-            return (
-              <small
-                key={topic}
-                className={styles.topic}
-                onClick={(event: MouseEvent<HTMLElement>) => {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  handleTopicSelect(topic)
-                }}>
-                {topic}
-              </small>
-            )
-          })}
-        </div>
+        <Topics />
       </article>
     </Link>
   )
