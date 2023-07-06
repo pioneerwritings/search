@@ -1066,6 +1066,10 @@ input:focus {
   overflow: auto;
 }
 
+.overflow-scroll {
+  overflow: scroll;
+}
+
 .overflow-x-auto {
   overflow-x: auto;
 }
@@ -1155,6 +1159,23 @@ input:focus {
 .border-red-500 {
   --tw-border-opacity: 1;
   border-color: rgb(239 68 68 / var(--tw-border-opacity));
+}
+
+.border-cornflower {
+  --tw-border-opacity: 1;
+  border-color: rgb(114 117 240 / var(--tw-border-opacity));
+}
+
+.border-cornflower\/10 {
+  border-color: rgb(114 117 240 / 0.1);
+}
+
+.border-cornflower\/30 {
+  border-color: rgb(114 117 240 / 0.3);
+}
+
+.border-cornflower\/50 {
+  border-color: rgb(114 117 240 / 0.5);
 }
 
 .border-b-ash\/30 {
@@ -1290,6 +1311,11 @@ input:focus {
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.px-\[10px\] {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .pb-36 {
@@ -1472,6 +1498,11 @@ input:focus {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-\[\#C9C9C9\] {
+  --tw-text-opacity: 1;
+  color: rgb(201 201 201 / var(--tw-text-opacity));
 }
 
 .no-underline {
@@ -1800,6 +1831,11 @@ input:focus {
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
+.hover\:border-cornflower:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(114 117 240 / var(--tw-border-opacity));
+}
+
 .hover\:bg-\[\#FAFAFB\]:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(250 250 251 / var(--tw-bg-opacity));
@@ -1819,6 +1855,18 @@ input:focus {
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-cornflower\/30:hover {
+  background-color: rgb(114 117 240 / 0.3);
+}
+
+.hover\:bg-cornflower\/10:hover {
+  background-color: rgb(114 117 240 / 0.1);
+}
+
+.hover\:bg-cornflower\/5:hover {
+  background-color: rgb(114 117 240 / 0.05);
+}
+
 .hover\:text-black:hover {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
@@ -1827,6 +1875,12 @@ input:focus {
 .hover\:underline:hover {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
+}
+
+.hover\:transition-all:hover {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 
 .active\:scale-100:active {

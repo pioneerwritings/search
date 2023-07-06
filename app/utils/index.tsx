@@ -1,4 +1,4 @@
-import { CMSSeries, CMSArticle, Article, Series  } from "~/types"
+import { CMSSeries, CMSArticle, Article, Series } from '~/types'
 
 export const formatValue = (val: number): string => {
   return (val / 100).toLocaleString('en-US', {
@@ -10,46 +10,53 @@ export const formatValue = (val: number): string => {
 }
 
 export const truncateText = (text: string, limit: number): string => {
-  if(text?.length > limit){
+  if (text?.length > limit) {
     return text.trim().substring(0, limit) + '...'
   }
   return text?.trim()
 }
 
 export const isSeries = (str: string): boolean | string => {
-  const title = str.trim(), regex = /—.*[0-9]/g
+  const title = str.trim(),
+    regex = /—.*[0-9]/g
 
-  if(!regex.test(title)){
+  if (!regex.test(title)) {
     return false
   }
   const arr = str.split('—')
   return arr[arr.length - 1]
 }
 
-
 export const normalizeArticle = (article: CMSArticle): Article => {
   const { id, attributes } = article
   const { title, subtitle, body, slug, excerpt } = attributes
 
   const author = attributes.author.data.attributes.name
-  const topic  = attributes.topic.data.attributes.name
+
+  const topics = attributes?.topics?.data.map(
+    ({ attributes }) => attributes.name
+  )
+
   const periodical = attributes.periodical.data.attributes.name
-  
+
   return {
-    ...(subtitle ? { subtitle }: {}),
+    ...(subtitle ? { subtitle } : {}),
     id,
     title,
     excerpt,
     slug,
     body,
     author,
-    topic,
+    topics,
     periodical,
-    ...(attributes?.series?.data ? { 
-      series: {
-        id: Number(attributes.series.data.id),
-        name: attributes.series.data.attributes.name.trim()
-    } } : {})
+    ...(attributes?.series?.data
+      ? {
+          series: {
+            id: Number(attributes.series.data.id),
+            name: attributes.series.data.attributes.name.trim()
+          }
+        }
+      : {})
   }
 }
 
@@ -60,10 +67,12 @@ export const normalizeSeries = (series: CMSSeries): Series => {
   const author = attributes.author.data.attributes.name
   const topic = attributes.topic.data.attributes.name
 
-  const articles: Series['articles'] = attributes.articles.data.map(({ id, attributes }) => {
-    const { title, excerpt } = attributes
-    return { id, title, excerpt }
-  })
+  const articles: Series['articles'] = attributes.articles.data.map(
+    ({ id, attributes }) => {
+      const { title, excerpt } = attributes
+      return { id, title, excerpt }
+    }
+  )
 
   return {
     id,

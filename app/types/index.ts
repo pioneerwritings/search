@@ -1,4 +1,3 @@
-
 export interface CustomWindow extends Window {
   env: { [k: string]: string }
 }
@@ -30,6 +29,10 @@ interface CMSRelation {
   }
 }
 
+interface CMSRelationList {
+  data: Array<CMSRelation['data']>
+}
+
 interface CMSArticleAttributes {
   id: string
   title: string
@@ -45,20 +48,22 @@ interface CMSSeriesAttributes {
 }
 
 export interface CMSSeries extends BaseDocument {
-  attributes: CMSSeriesAttributes & CMSAttributeMeta & {
-    author: CMSRelation
-    topic: CMSRelation
-    articles: { data: CMSArticle[] }
-  }
+  attributes: CMSSeriesAttributes &
+    CMSAttributeMeta & {
+      author: CMSRelation
+      topic: CMSRelation
+      articles: { data: CMSArticle[] }
+    }
 }
 
 export interface CMSArticle extends BaseDocument {
-  attributes: CMSArticleAttributes & CMSAttributeMeta & {
-    author: CMSRelation
-    topic: CMSRelation
-    periodical: CMSRelation
-    series?: CMSRelation
-  }
+  attributes: CMSArticleAttributes &
+    CMSAttributeMeta & {
+      author: CMSRelation
+      topics: CMSRelationList
+      periodical: CMSRelation
+      series?: CMSRelation
+    }
 }
 
 export interface CMSTopic {
@@ -69,7 +74,7 @@ export interface CMSTopic {
 }
 
 export interface CMSResponse<T> {
-  data: T[],
+  data: T[]
   meta?: {
     pagination?: {
       start: number
@@ -79,7 +84,7 @@ export interface CMSResponse<T> {
   }
 }
 export interface CMSSingleResponse<T> {
-  data: T,
+  data: T
   meta?: {
     pagination?: {
       start: number
@@ -97,7 +102,7 @@ export type CMSSeriesResponse = CMSResponse<CMSSeries>
 
 export interface Article extends BaseDocument, CMSArticleAttributes {
   author: string
-  topic: string
+  topics: Array<string>
   periodical: string
   series?: {
     id: number
@@ -105,7 +110,8 @@ export interface Article extends BaseDocument, CMSArticleAttributes {
   }
 }
 
-export type ArticleCard = BaseDocument & Pick<Article, 'title' | 'author' | 'topic' | 'excerpt'>
+export type ArticleCard = BaseDocument &
+  Pick<Article, 'title' | 'author' | 'topics' | 'excerpt'>
 
 export interface Series extends BaseDocument, CMSSeriesAttributes {
   author: string

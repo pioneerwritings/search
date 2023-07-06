@@ -60,11 +60,15 @@ export const styles = {
   topic: `
     border
     rounded-full
-    px-[12px]
+    px-2
     py-1
     font-inter
-    font-bold
-    text-xs
-    border-[#C9C9C9]
+    text-[10px]
+    border-cornflower/50
+    mr-2
+    shrink-0
+    hover:border-cornflower
+    hover:transition-all
+    hover:bg-cornflower/5
   `
 }
