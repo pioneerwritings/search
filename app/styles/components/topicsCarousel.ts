@@ -1,4 +1,3 @@
-
 export const styles = {
   carousel: `
     topics-carousel 
@@ -42,6 +41,7 @@ export const styles = {
     scrollbar-thin
     padding-0
     scroll-smooth
+    pt-2
   `,
   inactiveState: `
     text-black

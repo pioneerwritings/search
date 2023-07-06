@@ -63,7 +63,7 @@ export const styles = {
     px-2
     py-[2px]
     font-inter
-    text-[10px]
+    text-[12px]
     border-ash/80
     mr-2
     shrink-0
