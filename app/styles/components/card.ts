@@ -61,14 +61,16 @@ export const styles = {
     border
     rounded-full
     px-2
-    py-1
+    py-[2px]
     font-inter
     text-[10px]
-    border-cornflower/50
+    border-ash/80
     mr-2
     shrink-0
     hover:border-cornflower
     hover:transition-all
     hover:bg-cornflower/5
+    hover:text-indigo
+    text-ash
   `
 }
