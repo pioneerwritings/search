@@ -11,7 +11,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const q = qs.stringify(
     {
-      filters: { topic: { name: { $eq: topic } } }
+      filters: { topics: { name: { $eq: topic } } }
     },
     { encodeValuesOnly: true }
   )
