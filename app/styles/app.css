@@ -1127,9 +1127,8 @@ input:focus {
   border-bottom-width: 1px;
 }
 
-.border-\[\#C9C9C9\] {
-  --tw-border-opacity: 1;
-  border-color: rgb(201 201 201 / var(--tw-border-opacity));
+.border-ash\/80 {
+  border-color: rgb(118 118 132 / 0.8);
 }
 
 .border-black {
@@ -1257,11 +1256,6 @@ input:focus {
   padding-right: 2rem;
 }
 
-.px-\[12px\] {
-  padding-left: 12px;
-  padding-right: 12px;
-}
-
 .py-0 {
   padding-top: 0px;
   padding-bottom: 0px;
@@ -1290,6 +1284,11 @@ input:focus {
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.py-\[2px\] {
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 .pb-36 {
@@ -1326,6 +1325,10 @@ input:focus {
 
 .pt-4 {
   padding-top: 1rem;
+}
+
+.pt-2 {
+  padding-top: 0.5rem;
 }
 
 .text-left {
@@ -1383,6 +1386,10 @@ input:focus {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-\[12px\] {
+  font-size: 12px;
 }
 
 .font-bold {
@@ -1800,6 +1807,11 @@ input:focus {
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
+.hover\:border-cornflower:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(114 117 240 / var(--tw-border-opacity));
+}
+
 .hover\:bg-\[\#FAFAFB\]:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(250 250 251 / var(--tw-bg-opacity));
@@ -1807,6 +1819,10 @@ input:focus {
 
 .hover\:bg-ash\/5:hover {
   background-color: rgb(118 118 132 / 0.05);
+}
+
+.hover\:bg-cornflower\/5:hover {
+  background-color: rgb(114 117 240 / 0.05);
 }
 
 .hover\:bg-gray-100:hover {
@@ -1824,9 +1840,20 @@ input:focus {
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
+.hover\:text-indigo:hover {
+  --tw-text-opacity: 1;
+  color: rgb(62 59 201 / var(--tw-text-opacity));
+}
+
 .hover\:underline:hover {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
+}
+
+.hover\:transition-all:hover {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 
 .active\:scale-100:active {

@@ -64,7 +64,7 @@ export default function SeriesPage() {
                 heading={name}
                 excerpt={s.excerpt}
                 author={author}
-                topic={topic}
+                topics={[topic]}
               />
             )
           })}
