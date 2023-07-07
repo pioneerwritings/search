@@ -1,25 +1,26 @@
-import { json, LoaderArgs, MetaFunction } from "@remix-run/node"
+import { json, LoaderArgs, MetaFunction } from '@remix-run/node'
 import { fetchData } from '~/fetchers'
 import { normalizeSeries } from '~/utils'
 import { CMSSeriesResponse } from '~/types'
-import { useLoaderData } from "@remix-run/react"
-import { Card } from "~/components"
-import { ogSeriesImg } from "~/config"
+import { useLoaderData } from '@remix-run/react'
+import { Card } from '~/components'
+import { ogSeriesImg } from '~/config'
 
 export const loader = async ({}: LoaderArgs) => {
   const { data } = await fetchData<CMSSeriesResponse>('series')
-  
+
   return json({
     seriesList: data.map(normalizeSeries)
   })
 }
 
 export const meta: MetaFunction = ({ data }) => {
-  const title       = 'Series — Pioneer Writings'
-  const description = 'Series allows for a more productive reading experience by grouping all articles that belong to a series together in one place.'
+  const title = 'Series — Pioneer Writings'
+  const description =
+    'Series allows for a more productive reading experience by grouping all articles that belong to a series together in one place.'
 
   return {
-    charset: "utf-8",
+    charset: 'utf-8',
     title,
     description,
     'og:title': title,
@@ -29,7 +30,7 @@ export const meta: MetaFunction = ({ data }) => {
   }
 }
 
-export default function SeriesPage(){
+export default function SeriesPage() {
   const { seriesList } = useLoaderData<typeof loader>()
 
   return (
@@ -39,29 +40,31 @@ export default function SeriesPage(){
       </h1>
 
       <p className='max-w-lg text-center antialiased font-light mx-auto mt-3 mb-10'>
-        Series allows for a more productive reading experience by grouping all articles
-        that belong to a series together in one place.
+        Series allows for a more productive reading experience by grouping all
+        articles that belong to a series together in one place.
       </p>
 
-      <div className='m-auto md:max-w-3xl lg:max-w-3xl xl:max-w-6xl' role='feed' aria-label='All the series'>
+      <div
+        className='m-auto md:max-w-3xl lg:max-w-3xl xl:max-w-6xl'
+        role='feed'
+        aria-label='All the series'>
         <div className='grid gap-6 w-full h-full grid-cols-[repeat(auto-fill,_minmax(320px,_1fr))] justify-items-center'>
-          {
-            seriesList.map((series) => {
-              const { id, name, description, ...attrs } = series
+          {seriesList.map((series) => {
+            const { id, name, description, topic, ...attrs } = series
 
-              return (
-                <Card
-                  {...attrs}
-                  id={id}
-                  excerpt={description}
-                  type='series'
-                  heading={name}
-                  key={id}
-                  seriesLabel='Series'
-                />
-              )
-            })
-          }
+            return (
+              <Card
+                {...attrs}
+                id={id}
+                excerpt={description}
+                type='series'
+                heading={name}
+                key={id}
+                seriesLabel='Series'
+                topics={[topic]}
+              />
+            )
+          })}
         </div>
       </div>
     </main>

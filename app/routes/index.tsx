@@ -74,7 +74,6 @@ export default function Index() {
   const { GA4 } = useGoogleAnalytics()
 
   const canScroll = articles.length !== initialData.total
-
   const articleList: Article[] = topic && results ? results : articles
 
   useEffect(() => {
@@ -143,6 +142,7 @@ export default function Index() {
                 heading={title}
                 key={id}
                 seriesLabel={series ? 'Series' : ''}
+                handleTopicSelect={handleTopicChange}
               />
             )
           })}
