@@ -1,6 +1,6 @@
 import { LoaderFunction } from '@remix-run/node'
 import { useLoaderData, useFetcher } from '@remix-run/react'
-import { Card, TopicsCarousel, Show } from '~/components'
+import { Card, Show, ComboBox } from '~/components'
 import { useRecoilState } from 'recoil'
 import { isSeries, normalizeArticle } from '~/utils'
 import { useScrollBottom, useGoogleAnalytics } from '~/hooks'
@@ -64,7 +64,7 @@ export default function Index() {
 
   const [articles, setArticles] = useState<Article[]>(initialData.articles)
   const [results, setResults] = useState<Article[]>()
-  const [topic, setTopic] = useState<string>()
+  const [topic, setTopic] = useState<string>('')
   const [start, setStart] = useState<number>(LIMIT)
   const [_, setFooterState] = useRecoilState(footerState)
 
@@ -113,16 +113,17 @@ export default function Index() {
 
   const handleTopicChange = (topic: string) => {
     setTopic(topic)
-
     GA4?.gtag('event', 'topic_select', { topic })
   }
 
   return (
     <div className={styles.page}>
-      <TopicsCarousel
-        data={topics}
-        onClick={handleTopicChange}
-        activeItem={topic ?? ''}
+      <ComboBox
+        list={topics}
+        activeItem={topic}
+        handleChange={handleTopicChange}
+        placeholder='Select or search for a topic'
+        label='Filter by Topic'
       />
 
       <div
