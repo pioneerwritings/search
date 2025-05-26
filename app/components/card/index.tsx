@@ -20,7 +20,7 @@ export function Card<T extends CardProps>(props: T) {
     id,
     type,
     author,
-    topics,
+    topics = [],
     excerpt,
     heading,
     periodical,

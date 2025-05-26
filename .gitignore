@@ -11,3 +11,5 @@ node_modules
 /api/index.js.map
 /api/_assets
 *.map
+
+**/.claude/settings.local.json

@@ -12,17 +12,17 @@ export const Header = () => {
   const { pathname } = useLocation()
 
   const handleSearchClick = () => {
-    setSearchState(({ ...state, active: true }))
+    setSearchState({ ...state, active: true })
   }
 
   const handleHamburgerClick = () => {
-    setNavState(prev => {
+    setNavState((prev) => {
       return { active: !prev.active }
     })
   }
 
   const activeClass = (path: string) => {
-    if(path === pathname) {
+    if (path === pathname) {
       return styles.activeRoute
     }
   }
@@ -30,7 +30,11 @@ export const Header = () => {
   return (
     <header className={styles.header}>
       <Link to='/' className={styles.logo}>
-        <img className='w-24' src='/images/logo.svg' alt='Go to the home page' />
+        <img
+          className='w-24'
+          src='/images/logo.svg'
+          alt='Go to the home page'
+        />
       </Link>
 
       <button
@@ -42,25 +46,24 @@ export const Header = () => {
         <img src='/images/hamburger.svg' aria-hidden />
       </button>
 
-      <img
-        className={styles.logomark}
-        src='/images/logomark.svg'
-        alt='Go to the home page'
-      />
+      <Link to='/' className={styles.logomark}>
+        <img src='/images/logomark.svg' alt='Go to the home page' />
+      </Link>
 
       <nav className={styles.nav}>
-        {
-          ['Explore', 'Contact', 'Donate', 'Series'].map((r) => {
-            const route = r === 'Explore' ? '/' : `/${r.toLowerCase()}`
+        {['Explore', 'Series'].map((r) => {
+          const route = r === 'Explore' ? '/' : `/${r.toLowerCase()}`
 
-            const classes = classNames(
-              'mr-6 text-[#939393] hover:text-black', activeClass(route)
-            )
-            return (
-              <Link to={route} className={classes} key={r}>{r}</Link>
-            )
-          })
-        }
+          const classes = classNames(
+            'mr-6 text-[#939393] hover:text-black',
+            activeClass(route)
+          )
+          return (
+            <Link to={route} className={classes} key={r}>
+              {r}
+            </Link>
+          )
+        })}
       </nav>
 
       <button
@@ -70,7 +73,7 @@ export const Header = () => {
         aria-label='Search'
         onClick={handleSearchClick}>
         <img src='/images/search.svg' alt='' aria-hidden='true' />
-      </button> 
+      </button>
     </header>
   )
 }

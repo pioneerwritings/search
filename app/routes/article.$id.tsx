@@ -28,10 +28,6 @@ interface LoaderResponse {
   }
 }
 
-interface LocationState {
-  query?: string
-}
-
 export const loader = async ({ params }: LoaderArgs) => {
   const response = await fetchData<CMSSingleArticleResponse>(
     `articles/${params.id}`
@@ -99,7 +95,7 @@ export const meta: MetaFunction = ({ data }) => {
 export default function ArticlePage() {
   const [copied, setCopied] = useState(false)
   const { article, series } = useLoaderData<LoaderResponse>()
-  const { state } = useLocation<LocationState>()
+  const { state } = useLocation()
   const [_, setFooterState] = useRecoilState(FooterState)
   const { bottom } = useScrollBottom()
   const { title, subtitle, author, body, periodical } = article

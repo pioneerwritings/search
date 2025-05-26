@@ -1,8 +1,8 @@
 import {
   type ErrorBoundaryComponent,
-  type LinksFunction, 
-  json, 
-  MetaFunction 
+  type LinksFunction,
+  json,
+  MetaFunction
 } from '@remix-run/node'
 
 import {
@@ -24,7 +24,7 @@ import { ogImagePath } from './config'
 import styles from './styles/app.css'
 
 export const meta: MetaFunction = () => {
-  const title       = 'Pioneer Writings'
+  const title = 'Pioneer Writings'
   const description = 'Let the dead speak through their works.'
 
   return {
@@ -42,7 +42,10 @@ export const meta: MetaFunction = () => {
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
-  { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap' },
+  {
+    rel: 'stylesheet',
+    href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap'
+  },
   { rel: 'stylesheet', href: styles },
   ...algoliaSearchLinks()
 ]
@@ -55,7 +58,6 @@ export const loader = async () => {
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
       ALGOLIA_SEARCH_KEY: process.env.ALGOLIA_SEARCH_KEY,
       ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
-      PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
       GA_TRACKING_ID: process.env.GA_TRACKING_ID,
       NODE_ENV: process.env.NODE_ENV
     }
@@ -71,13 +73,10 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      
+
       <body>
         <RecoilRoot>
-          <GA4 
-            trackingID={env.GA_TRACKING_ID!} 
-            env={env.NODE_ENV}
-          />
+          <GA4 trackingID={env.GA_TRACKING_ID!} env={env.NODE_ENV} />
 
           <div className={rootStyles}>
             <Search />
@@ -89,10 +88,9 @@ export default function App() {
         </RecoilRoot>
         <ScrollRestoration />
         <script
-          dangerouslySetInnerHTML={{__html: 
-            `window.env = ${JSON.stringify(env)}`
-          }}>
-        </script>
+          dangerouslySetInnerHTML={{
+            __html: `window.env = ${JSON.stringify(env)}`
+          }}></script>
         <Scripts />
         <LiveReload />
       </body>

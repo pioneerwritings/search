@@ -29,6 +29,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hotkeys-hook": "^3.4.7",
+    "react-instantsearch-core": "^7.15.7",
     "react-instantsearch-dom": "^6.31.1",
     "react-instantsearch-hooks-web": "^6.38.1",
     "react-spinner-material": "^1.4.0",
