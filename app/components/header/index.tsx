@@ -12,7 +12,7 @@ export const Header = () => {
   const { pathname } = useLocation()
 
   const handleSearchClick = () => {
-    setSearchState({ ...state, active: true })
+    // setSearchState({ ...state, active: true })
   }
 
   const handleHamburgerClick = () => {
